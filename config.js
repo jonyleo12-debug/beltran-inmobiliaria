@@ -2,6 +2,6 @@
 window.BELTRAN = {
   proyecto: 'libro-de-cuentas-ce78b',
   sitio: 'beltran',
-  whatsapp: '',
+  whatsapp: '593979269302',
   correo: ''
 };
