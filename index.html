@@ -7,7 +7,15 @@
 <meta name="description" content="Beltrán Inmobiliaria: casas, terrenos, departamentos y locales en venta en Puyo, Pastaza. Fotos, precios y ubicación de cada propiedad.">
 <meta property="og:title" content="Beltrán Inmobiliaria">
 <meta property="og:description" content="Casas, terrenos y locales en venta en Puyo, Pastaza.">
-<meta property="og:image" content="assets/icono.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jonyleo12-debug.github.io/beltran-inmobiliaria/">
+<meta property="og:site_name" content="Beltrán Inmobiliaria">
+<meta property="og:locale" content="es_EC">
+<meta property="og:image" content="https://jonyleo12-debug.github.io/beltran-inmobiliaria/assets/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jonyleo12-debug.github.io/beltran-inmobiliaria/assets/compartir.jpg">
 <meta name="theme-color" content="#252e4c">
 <link rel="icon" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -24,6 +32,7 @@
   --titulos: 'Saira', 'Inter', system-ui, sans-serif; --cuerpo: 'Inter', system-ui, -apple-system, sans-serif;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
 body { margin: 0; font: 16px/1.55 var(--cuerpo); color: var(--texto); background: var(--gris-3); -webkit-font-smoothing: antialiased; }
 img { max-width: 100%; display: block; }
@@ -69,6 +78,7 @@ section { padding: 72px 0; }
 .sec-cab h2 { margin: 0; font: 800 clamp(28px, 3.6vw, 40px)/1.1 var(--titulos); color: var(--navy); }
 .sec-cab p { margin: 6px 0 0; color: var(--suave); }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.sec-cab > .chips { margin-left: auto; }
 .chip { border: 1px solid var(--linea); background: #fff; color: var(--suave); border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
 .chip[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
 .grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 24px; }
@@ -161,6 +171,26 @@ footer img { height: 36px; width: auto; }
 #mapa-ficha { height: 260px; border-radius: 16px; border: 1px solid var(--linea); }
 body.bloq { overflow: hidden; }
 :focus-visible { outline: 3px solid #8fa1d6; outline-offset: 2px; }
+
+/* Animations */
+@keyframes entra { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes flota { 0%, 100% { transform: rotate(-8deg) translateY(0); } 50% { transform: rotate(-5deg) translateY(-18px); } }
+.hero small, .hero h1, .hero p, .hero .buscador { animation: entra .8s cubic-bezier(.2,.7,.2,1) both; }
+.hero h1 { animation-delay: .1s; } .hero p { animation-delay: .22s; } .hero .buscador { animation-delay: .34s; }
+.hero::after { animation: flota 14s ease-in-out infinite; }
+.rev { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+.rev.vis { opacity: 1; transform: none; }
+.tarjeta.rev { transition: transform .7s cubic-bezier(.2,.7,.2,1), box-shadow .25s, opacity .7s cubic-bezier(.2,.7,.2,1); }
+.tarjeta.rev.vis:hover { transform: translateY(-4px); }
+.tarjeta.rev.vis.resaltada, .tarjeta.resaltada { transform: translateY(-4px); box-shadow: 0 0 0 2px #2e51a1, var(--sombra); }
+.pin-casa.activo { z-index: 3; } .pin-casa.activo svg { transform: scale(1.25) translateY(-3px); } .pin-casa.activo .pill-t { background: #2e51a1; color: #fff; }
+.orden { border: 1px solid var(--linea); background: #fff; border-radius: 999px; padding: 8px 14px; font: 600 14px var(--cuerpo); color: var(--suave); }
+.wa-flota { position: fixed; right: 16px; bottom: 18px; z-index: 60; width: 58px; height: 58px; border-radius: 50%; background: #1fae58; color: #fff; display: none; place-items: center; box-shadow: 0 10px 24px -8px rgba(0,0,0,.45); transform: scale(0); transition: transform .3s cubic-bezier(.3,1.5,.5,1); }
+.wa-flota svg { width: 30px; height: 30px; }
+.wa-flota.ver { transform: scale(1); }
+@media (max-width: 760px) { .wa-flota { display: grid; } .cab nav .btn-wa { display: none; } }
+body.bloq .wa-flota { display: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .rev { opacity: 1; transform: none; } }
 </style>
 </head>
 <body>
@@ -195,7 +225,7 @@ body.bloq { overflow: hidden; }
     <div class="envoltura">
       <div class="sec-cab">
         <div><h2>Propiedades</h2><p id="conteo">Cargando propiedades…</p></div>
-        <div class="chips" id="chips"></div>
+        <div class="chips" id="chips"></div><select class="orden" id="orden" aria-label="Ordenar"><option value="">Recomendadas</option><option value="menor">Precio: menor a mayor</option><option value="mayor">Precio: mayor a menor</option><option value="nuevas">Más nuevas</option></select>
       </div>
       <div class="grilla" id="grilla"><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div></div>
     </div>
@@ -243,6 +273,7 @@ body.bloq { overflow: hidden; }
 
 <div class="detalle" id="detalle" hidden role="dialog" aria-modal="true" aria-labelledby="d-titulo"></div>
 
+<a class="wa-flota wa-link" href="#contacto" aria-label="Escríbenos por WhatsApp" data-msg="Hola, quisiera información sobre sus propiedades."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2zm-3.3 5.7c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.4-.3-2-1c-.3-.1-.5-.1-.7.2l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5h-.5z"/></svg></a>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (() => {
@@ -321,12 +352,21 @@ body.bloq { overflow: hidden; }
     // Dots change the photo on the card without opening the listing
     const img = a.querySelector('.foto > img'), pts = [...a.querySelectorAll('.pfotos button')];
     pts.forEach((b, k) => b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); img.src = fotos[k]; pts.forEach((x, j) => x.setAttribute('aria-current', String(j === k))); }));
+    const pin = () => document.querySelector(`#mapa .pin-casa[data-id="${CSS.escape(p.id)}"]`);
+    a.addEventListener('mouseenter', () => { const q = pin(); if (q) q.classList.add('activo'); });
+    a.addEventListener('mouseleave', () => { const q = pin(); if (q) q.classList.remove('activo'); });
+    a.dataset.id = p.id;
     return a;
   }
+  const ORDEN = { menor: (a, b) => (a.precio || 9e9) - (b.precio || 9e9), mayor: (a, b) => (b.precio || 0) - (a.precio || 0), nuevas: (a, b) => String(b.creado || '').localeCompare(String(a.creado || '')) };
+  // Reveal on scroll; cards already seen don't animate again on the 2-minute refresh
+  const vistos = new Set();
+  const obs = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' }) : null;
+  function revelar(n, k) { if (!obs) return; n.classList.add('rev'); if (k != null) n.style.transitionDelay = Math.min(k % 3, 2) * 90 + 'ms'; obs.observe(n); }
   function pintar() {
-    const vs = visibles();
+    const vs = visibles(), o = $('orden').value; if (ORDEN[o]) vs.sort(ORDEN[o]);
     $('conteo').textContent = props.length ? `${vs.length} propiedad${vs.length === 1 ? '' : 'es'}` : 'Muy pronto publicaremos nuestras propiedades.';
-    $('grilla').replaceChildren(...(vs.length ? vs.map(tarjeta) : [el('div', 'vacio', props.length ? 'No hay propiedades con esos filtros. Prueba con otros.' : 'Estamos preparando nuestras primeras propiedades. Escríbenos por WhatsApp y te avisamos.')]));
+    $('grilla').replaceChildren(...(vs.length ? vs.map((p, k) => { const t = tarjeta(p); if (!vistos.has(p.id)) { vistos.add(p.id); revelar(t, k); } return t; }) : [el('div', 'vacio', props.length ? 'No hay propiedades con esos filtros. Prueba con otros.' : 'Estamos preparando nuestras primeras propiedades. Escríbenos por WhatsApp y te avisamos.')]));
     pintarMapa(vs);
   }
   // Google Maps when config.js has gmapsKey; otherwise Leaflet satellite.
@@ -361,7 +401,7 @@ body.bloq { overflow: hidden; }
   };
   const PIN_COLOR = { Vendida: '#8a8a8a', Reservada: '#c9952b' };
   const precioCorto = (n) => n >= 10000 ? '$' + (Math.round(n / 100) / 10).toString().replace('.', ',') + 'k' : usd.format(n);
-  const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
+  const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}" data-id="${esc(p.id)}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
   function pinG(m, p, click) {
     const o = new google.maps.OverlayView(), pos = new google.maps.LatLng(p.lat, p.lng);
     o.onAdd = function () { const d = document.createElement('div'); d.style.cssText = 'position:absolute;cursor:pointer'; d.innerHTML = htmlPin(p); d.title = p.nombre || p.tipo || ''; if (click) d.addEventListener('click', click); this.div = d; this.getPanes().overlayMouseTarget.appendChild(d); };
@@ -451,6 +491,13 @@ body.bloq { overflow: hidden; }
   function cerrar() { const d = $('detalle'); if (d.hidden) return; d.hidden = true; d.replaceChildren(); document.body.classList.remove('bloq'); document.title = 'Beltrán Inmobiliaria · Casas, terrenos y locales en Puyo'; if (location.hash.startsWith('#p/')) history.pushState('', '', location.pathname + location.search + '#propiedades'); }
   function abrirDesdeUrl() { const m = location.hash.match(/^#p\/(.+)$/); if (!m) { cerrar(); return; } const p = props.find((x) => x.id === m[1]); if (p) abrir(p); }
   window.addEventListener('hashchange', abrirDesdeUrl);
+  $('orden').addEventListener('change', pintar);
+  const marcaTarjeta = (e, on) => { const q = e.target.closest && e.target.closest('.pin-casa'); if (!q) return; const t = document.querySelector(`.tarjeta[data-id="${CSS.escape(q.dataset.id)}"]`); if (t) t.classList.toggle('resaltada', on); };
+  document.addEventListener('mouseover', (e) => { if (e.target.closest && e.target.closest('#mapa')) marcaTarjeta(e, true); });
+  document.addEventListener('mouseout', (e) => { if (e.target.closest && e.target.closest('#mapa')) marcaTarjeta(e, false); });
+  document.querySelectorAll('.sec-cab, #mapa, .nosotros > *, .contacto, .punto').forEach((n, k) => revelar(n));
+  const flota = document.querySelector('.wa-flota');
+  setTimeout(() => flota.classList.add('ver'), 900);
   $('detalle').addEventListener('click', (e) => { if (e.target === $('detalle')) cerrar(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(); });
   $('buscador').addEventListener('submit', (e) => { e.preventDefault(); filtro.tipo = $('f-tipo').value; filtro.precio = Number($('f-precio').value) || 0; filtro.hab = Number($('f-hab').value) || 0; pintar(); $('propiedades').scrollIntoView({ behavior: 'smooth' }); });
