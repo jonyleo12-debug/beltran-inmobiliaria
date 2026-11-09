@@ -322,6 +322,50 @@ body.bloq { overflow: hidden; }
     $('grilla').replaceChildren(...(vs.length ? vs.map(tarjeta) : [el('div', 'vacio', props.length ? 'No hay propiedades con esos filtros. Prueba con otros.' : 'Estamos preparando nuestras primeras propiedades. Escríbenos por WhatsApp y te avisamos.')]));
     pintarMapa(vs);
   }
+  // Google Maps when config.js has gmapsKey; otherwise Leaflet satellite.
+  let gEstado = CFG.gmapsKey ? 'cargando' : 'no', gPromesa = null;
+  function cargarGoogle() {
+    if (gEstado === 'no') return Promise.resolve(false);
+    if (!gPromesa) gPromesa = new Promise((res) => {
+      window.__gmListo = () => { gEstado = 'si'; res(true); };
+      window.gm_authFailure = () => { gEstado = 'no'; volverALeaflet(); };
+      const sc = document.createElement('script');
+      sc.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(CFG.gmapsKey) + '&callback=__gmListo&loading=async&language=es&region=EC';
+      sc.async = true; sc.onerror = () => { gEstado = 'no'; res(false); };
+      document.head.appendChild(sc);
+    });
+    return gPromesa;
+  }
+  function volverALeaflet() {
+    mapa = null; gCosas.forEach((c) => c.setMap(null)); gCosas = [];
+    const m = $('mapa'); m.replaceWith(Object.assign(document.createElement('div'), { id: 'mapa' }));
+    $('mapa').setAttribute('aria-label', 'Mapa de propiedades');
+    pintarMapa(visibles());
+  }
+  let gCosas = [];
+  const htmlPin = (p) => `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`;
+  function pinG(m, p, click) {
+    const o = new google.maps.OverlayView(), pos = new google.maps.LatLng(p.lat, p.lng);
+    o.onAdd = function () { const d = document.createElement('div'); d.style.cssText = 'position:absolute;cursor:pointer'; d.innerHTML = htmlPin(p); d.title = p.nombre || p.tipo || ''; if (click) d.addEventListener('click', click); this.div = d; this.getPanes().overlayMouseTarget.appendChild(d); };
+    o.draw = function () { const q = this.getProjection().fromLatLngToDivPixel(pos); if (q) { this.div.style.left = q.x + 'px'; this.div.style.top = q.y + 'px'; } };
+    o.onRemove = function () { this.div && this.div.remove(); };
+    o.setMap(m); return o;
+  }
+  function poligonoG(m, p) {
+    return new google.maps.Polygon({ map: m, paths: p.poligono.map((q) => ({ lat: q.lat, lng: q.lng })), strokeColor: '#ffffff', strokeWeight: 2, fillColor: '#4d5c85', fillOpacity: .35, clickable: false });
+  }
+  const opcG = { mapTypeControl: true, mapTypeControlOptions: { mapTypeIds: ['roadmap', 'hybrid'] }, streetViewControl: false, gestureHandling: 'cooperative', clickableIcons: false };
+  async function pintarMapaG(vs) {
+    if (!mapa) mapa = new google.maps.Map($('mapa'), Object.assign({ center: { lat: -1.4924, lng: -78.0024 }, zoom: 14 }, opcG));
+    gCosas.forEach((c) => c.setMap(null)); gCosas = [];
+    const con = vs.filter((p) => p.lat != null && p.lng != null), b = new google.maps.LatLngBounds();
+    con.forEach((p) => {
+      if ((p.poligono || []).length > 2) gCosas.push(poligonoG(mapa, p));
+      gCosas.push(pinG(mapa, p, () => { location.hash = 'p/' + p.id; })); b.extend({ lat: p.lat, lng: p.lng });
+    });
+    if (con.length === 1) { mapa.setCenter(b.getCenter()); mapa.setZoom(16); }
+    else if (con.length) { mapa.fitBounds(b, 50); google.maps.event.addListenerOnce(mapa, 'idle', () => { if (mapa.getZoom() > 16) mapa.setZoom(16); }); }
+  }
   function iniciarMapa() {
     if (mapa || !window.L) return;
     mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-1.4924, -78.0024], 14);
@@ -329,6 +373,8 @@ body.bloq { overflow: hidden; }
     capa = L.layerGroup().addTo(mapa);
   }
   function pintarMapa(vs) {
+    if (gEstado === 'cargando') { cargarGoogle().then(() => pintarMapa(visibles())); return; }
+    if (gEstado === 'si') { pintarMapaG(vs); return; }
     iniciarMapa(); if (!mapa) return; capa.clearLayers();
     const con = vs.filter((p) => p.lat != null && p.lng != null);
     con.forEach((p) => {
@@ -368,7 +414,12 @@ body.bloq { overflow: hidden; }
     if (img && fotos.length > 1) { let x0 = null; img.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true }); img.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(i + (dx < 0 ? 1 : -1)); x0 = null; }); }
     d.querySelector('.cerrar').onclick = cerrar;
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
-    if (p.lat != null && window.L) setTimeout(() => {
+    if (p.lat != null && gEstado === 'si') setTimeout(() => {
+      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 17, mapTypeId: 'hybrid' }, opcG));
+      if ((p.poligono || []).length > 2) { poligonoG(m, p); const b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); m.fitBounds(b, 40); }
+      pinG(m, p);
+    }, 50);
+    else if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
       mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 17);
       satelite(mapaFicha);

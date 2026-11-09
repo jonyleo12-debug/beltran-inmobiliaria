@@ -3,5 +3,7 @@ window.BELTRAN = {
   proyecto: 'libro-de-cuentas-ce78b',
   sitio: 'beltran',
   whatsapp: '593979269302',
-  correo: ''
+  correo: '',
+  // Clave de Google Maps solo para esta página (restringida a jonyleo12-debug.github.io). Vacía = mapa satélite gratis.
+  gmapsKey: ''
 };
