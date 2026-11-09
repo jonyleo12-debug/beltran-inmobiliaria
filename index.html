@@ -262,7 +262,7 @@ body.bloq { overflow: hidden; }
     area: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M4 10h6V4"/></svg>',
     pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   };
-  let props = [], filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas' }, mapa = null, capa = null;
+  let props = [], filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas', clase: '' }, mapa = null, capa = null;
   $('anio').textContent = new Date().getFullYear();
 
   // WhatsApp and e-mail links come from config.js
@@ -292,14 +292,17 @@ body.bloq { overflow: hidden; }
       pintarFiltros(); pintar(); abrirDesdeUrl();
     } catch (e) { $('conteo').textContent = 'No se pudieron cargar las propiedades. Revisa tu conexión.'; $('grilla').replaceChildren(); }
   }
-  const visibles = () => props.filter((p) => (filtro.estado === 'activas' ? p.estado !== 'Vendida' : filtro.estado === 'Vendida' ? p.estado === 'Vendida' : true)
+  const visibles = () => props.filter((p) => (!filtro.clase || (filtro.clase === 'Terreno') === (p.tipo === 'Terreno')) && (filtro.estado === 'activas' ? p.estado !== 'Vendida' : filtro.estado === 'Vendida' ? p.estado === 'Vendida' : true)
     && (!filtro.tipo || p.tipo === filtro.tipo) && (!filtro.precio || (p.precio || 0) <= filtro.precio) && (!filtro.hab || (p.hab || 0) >= filtro.hab));
   function pintarFiltros() {
     const s = $('f-tipo'), v = s.value; const tipos = [...new Set(props.map((p) => p.tipo).filter(Boolean))];
     s.replaceChildren(new Option('Todos los tipos', ''), ...tipos.map((t) => new Option(t, t))); s.value = v;
     const ch = $('chips'), vend = props.some((p) => p.estado === 'Vendida');
-    const op = [['activas', 'En venta'], ...(vend ? [['Vendida', 'Vendidas']] : []), ['todas', 'Todas']];
-    ch.replaceChildren(...op.map(([k, t]) => { const b = el('button', 'chip', t); b.type = 'button'; b.setAttribute('aria-pressed', String(filtro.estado === k)); b.addEventListener('click', () => { filtro.estado = k; pintarFiltros(); pintar(); }); return b; }));
+    // Chips: Vivienda (everything but land) / Terreno; tap again to show all. Vendidas only if any sold.
+    const chip = (t, activo, fn) => { const b = el('button', 'chip', t); b.type = 'button'; b.setAttribute('aria-pressed', String(activo)); b.addEventListener('click', () => { fn(); pintarFiltros(); pintar(); }); return b; };
+    ch.replaceChildren(
+      ...['Vivienda', 'Terreno'].map((c) => chip(c, filtro.clase === c, () => { filtro.clase = filtro.clase === c ? '' : c; })),
+      ...(vend ? [chip('Vendidas', filtro.estado === 'Vendida', () => { filtro.estado = filtro.estado === 'Vendida' ? 'activas' : 'Vendida'; })] : []));
   }
   const datosHtml = (p) => [p.hab ? `<span>${ICO.hab}${p.hab} hab.</span>` : '', p.banos ? `<span>${ICO.ban}${p.banos} baño${p.banos === 1 ? '' : 's'}</span>` : '', p.parq ? `<span>${ICO.parq}${p.parq} parq.</span>` : '', p.area ? `<span>${ICO.area}${p.area.toLocaleString('es-EC')} m²</span>` : ''].join('');
   const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
