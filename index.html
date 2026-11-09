@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beltrán Inmobiliaria · Casas, terrenos y locales en Puyo</title>
+<meta name="description" content="Beltrán Inmobiliaria: casas, terrenos, departamentos y locales en venta en Puyo, Pastaza. Fotos, precios y ubicación de cada propiedad.">
+<meta property="og:title" content="Beltrán Inmobiliaria">
+<meta property="og:description" content="Casas, terrenos y locales en venta en Puyo, Pastaza.">
+<meta property="og:image" content="assets/icono.png">
+<meta name="theme-color" content="#252e4c">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="config.js"></script>
+<style>
+:root {
+  --navy: #252e4c; --navy-2: #161c35; --slate: #4d5c85; --gris: #b9bdc6; --gris-2: #eef0f4; --gris-3: #f6f7f9;
+  --texto: #1d2236; --suave: #5d6680; --linea: #dfe2e9; --blanco: #fff; --ok: #2f7d55; --res: #b7791f; --vend: #b23a3a;
+  --radio: 18px; --sombra: 0 18px 40px -24px rgba(22, 28, 53, .45);
+  --titulos: 'Saira', 'Inter', system-ui, sans-serif; --cuerpo: 'Inter', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font: 16px/1.55 var(--cuerpo); color: var(--texto); background: var(--gris-3); -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+button { font: inherit; cursor: pointer; }
+.envoltura { width: min(1180px, 100% - 32px); margin-inline: auto; }
+
+/* Header */
+.cab { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%); border-bottom: 1px solid var(--linea); }
+.cab .envoltura { display: flex; align-items: center; gap: 24px; height: 72px; }
+.cab .logo img { height: 44px; width: auto; }
+.cab nav { margin-left: auto; display: flex; gap: 22px; align-items: center; }
+.cab nav a { text-decoration: none; font-weight: 600; font-size: 15px; color: var(--suave); }
+.cab nav a:hover { color: var(--navy); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 700; text-decoration: none; transition: transform .15s, box-shadow .15s, background .15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn-prim { background: var(--navy); color: #fff; box-shadow: 0 10px 22px -12px rgba(37,46,76,.8); }
+.btn-prim:hover { background: var(--navy-2); }
+.btn-wa { background: #1fae58; color: #fff; box-shadow: 0 10px 22px -12px rgba(31,174,88,.8); }
+.btn-wa:hover { background: #17924a; }
+.btn-claro { background: #fff; color: var(--navy); }
+.btn svg { width: 18px; height: 18px; flex: none; }
+@media (max-width: 760px) { .cab nav a:not(.btn) { display: none; } .cab .logo img { height: 36px; } .cab nav .btn { padding: 10px 16px; font-size: 14px; } }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; color: #fff; background: radial-gradient(120% 120% at 85% 10%, #56658f 0%, #2d3658 38%, #161c35 100%); }
+.hero::after { content: ''; position: absolute; right: -120px; bottom: -160px; width: 560px; height: 620px; background: url(assets/icono.png) center/contain no-repeat; opacity: .14; transform: rotate(-8deg); pointer-events: none; }
+.hero .envoltura { position: relative; z-index: 1; padding: 84px 0 96px; }
+.hero small { display: inline-block; letter-spacing: .32em; text-transform: uppercase; font: 600 13px var(--titulos); color: var(--gris); margin-bottom: 14px; }
+.hero h1 { margin: 0; font: 800 clamp(34px, 5.4vw, 62px)/1.05 var(--titulos); letter-spacing: -.01em; max-width: 760px; }
+.hero p { margin: 18px 0 0; font-size: clamp(16px, 2vw, 19px); color: #d9dcea; max-width: 600px; }
+.buscador { margin-top: 34px; display: grid; grid-template-columns: 1.3fr 1fr 1fr auto; gap: 10px; background: #fff; padding: 10px; border-radius: 22px; max-width: 860px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+.buscador label { display: grid; gap: 2px; padding: 6px 14px; border-radius: 14px; color: var(--suave); font-size: 12px; font-weight: 600; }
+.buscador label:hover { background: var(--gris-3); }
+.buscador select, .buscador input { border: 0; background: none; font: 600 15px var(--cuerpo); color: var(--texto); padding: 2px 0; outline: none; width: 100%; }
+.buscador .btn { border-radius: 16px; padding: 0 26px; }
+@media (max-width: 760px) { .buscador { grid-template-columns: 1fr 1fr; } .buscador label:first-child { grid-column: 1 / -1; } .buscador .btn { grid-column: 1 / -1; padding: 14px; } .hero .envoltura { padding: 56px 0 64px; } }
+
+/* Properties */
+section { padding: 72px 0; }
+.sec-cab { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.sec-cab h2 { margin: 0; font: 800 clamp(28px, 3.6vw, 40px)/1.1 var(--titulos); color: var(--navy); }
+.sec-cab p { margin: 6px 0 0; color: var(--suave); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--linea); background: #fff; color: var(--suave); border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 14px; }
+.chip[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+.grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 24px; }
+.tarjeta { background: #fff; border-radius: var(--radio); overflow: hidden; box-shadow: var(--sombra); border: 1px solid var(--linea); text-decoration: none; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+.tarjeta:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -26px rgba(22,28,53,.55); }
+.tarjeta .foto { position: relative; aspect-ratio: 4 / 3; background: linear-gradient(135deg, var(--gris-2), #dfe3ec); overflow: hidden; }
+.tarjeta .foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.tarjeta:hover .foto img { transform: scale(1.04); }
+.tarjeta .foto .sin { position: absolute; inset: 0; display: grid; place-items: center; }
+.tarjeta .foto .sin img { width: 72px; height: auto; opacity: .35; }
+.estado { position: absolute; left: 14px; top: 14px; padding: 5px 12px; border-radius: 999px; font: 700 12px var(--cuerpo); letter-spacing: .04em; color: #fff; background: var(--ok); }
+.estado.Reservada { background: var(--res); } .estado.Vendida { background: var(--vend); }
+.nfotos { position: absolute; right: 12px; bottom: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(22,28,53,.7); color: #fff; font-size: 12px; font-weight: 600; }
+.tarjeta .info { padding: 18px 20px 20px; display: grid; gap: 8px; flex: 1; }
+.tarjeta .tipo { font: 600 12px var(--titulos); letter-spacing: .2em; text-transform: uppercase; color: var(--slate); }
+.tarjeta h3 { margin: 0; font: 700 20px/1.25 var(--titulos); color: var(--navy); }
+.tarjeta .dir { color: var(--suave); font-size: 14px; display: flex; gap: 6px; align-items: center; }
+.tarjeta .dir svg, .ficha .dir svg { width: 15px; height: 15px; flex: none; }
+.datos { display: flex; gap: 14px; flex-wrap: wrap; color: var(--suave); font-size: 14px; font-weight: 500; }
+.datos span { display: inline-flex; align-items: center; gap: 6px; }
+.datos svg { width: 17px; height: 17px; }
+.tarjeta .precio { margin-top: auto; padding-top: 8px; font: 800 24px var(--titulos); color: var(--navy); }
+.tarjeta.vendida { opacity: .7; }
+.vacio { padding: 48px 24px; text-align: center; color: var(--suave); background: #fff; border-radius: var(--radio); border: 1px dashed var(--linea); }
+.cargando { height: 360px; border-radius: var(--radio); background: linear-gradient(90deg, #eceef3 25%, #f6f7f9 50%, #eceef3 75%); background-size: 200% 100%; animation: brillo 1.2s infinite; }
+@keyframes brillo { to { background-position: -200% 0; } }
+
+/* Map */
+.mapa-sec { background: #fff; }
+#mapa { height: 460px; border-radius: var(--radio); border: 1px solid var(--linea); z-index: 0; }
+.pin-precio { background: var(--navy); color: #fff; font: 700 12px var(--cuerpo); padding: 5px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(0,0,0,.5); transform: translate(-50%, -50%); display: inline-block; border: 2px solid #fff; }
+.pin-precio.Vendida { background: var(--vend); } .pin-precio.Reservada { background: var(--res); }
+
+/* About + contact */
+.nosotros { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+.nosotros h2 { margin: 0 0 14px; font: 800 clamp(28px, 3.6vw, 40px)/1.1 var(--titulos); color: var(--navy); }
+.nosotros p { color: var(--suave); margin: 0 0 14px; }
+.puntos { display: grid; gap: 14px; margin-top: 22px; }
+.punto { display: flex; gap: 14px; align-items: start; }
+.punto b { display: block; color: var(--navy); }
+.punto i { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--gris-2); display: grid; place-items: center; color: var(--slate); font-style: normal; }
+.punto i svg { width: 20px; height: 20px; }
+.marca { aspect-ratio: 1; border-radius: 28px; background: radial-gradient(100% 100% at 30% 20%, #ffffff, #e9ecf2); display: grid; place-items: center; box-shadow: var(--sombra); }
+.marca img { width: 62%; }
+@media (max-width: 860px) { .nosotros { grid-template-columns: 1fr; } .marca { max-width: 320px; } }
+.contacto { background: var(--navy); color: #fff; border-radius: 28px; padding: clamp(28px, 5vw, 56px); display: grid; grid-template-columns: 1.2fr auto; gap: 24px; align-items: center; position: relative; overflow: hidden; }
+.contacto h2 { margin: 0; font: 800 clamp(26px, 3.4vw, 38px)/1.15 var(--titulos); }
+.contacto p { margin: 10px 0 0; color: #cfd3e3; }
+.contacto .acc { display: flex; gap: 10px; flex-wrap: wrap; }
+@media (max-width: 760px) { .contacto { grid-template-columns: 1fr; } }
+footer { padding: 36px 0 48px; color: var(--suave); font-size: 14px; }
+footer .envoltura { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+footer img { height: 36px; width: auto; }
+
+/* Property detail */
+.detalle { position: fixed; inset: 0; z-index: 100; background: rgba(15, 19, 36, .55); backdrop-filter: blur(4px); display: grid; place-items: start center; overflow-y: auto; padding: 32px 16px; }
+.detalle[hidden] { display: none; }
+.ficha { background: #fff; width: min(1080px, 100%); border-radius: 26px; overflow: hidden; box-shadow: 0 40px 80px -30px rgba(0,0,0,.6); position: relative; }
+.cerrar { position: absolute; right: 16px; top: 16px; z-index: 3; width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); box-shadow: 0 4px 14px rgba(0,0,0,.2); font-size: 22px; line-height: 1; color: var(--navy); }
+.galeria { position: relative; background: var(--navy-2); }
+.galeria .principal { aspect-ratio: 16 / 9; width: 100%; object-fit: cover; }
+.galeria .flecha { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,.88); color: var(--navy); font-size: 22px; box-shadow: 0 4px 14px rgba(0,0,0,.25); }
+.galeria .ant { left: 14px; } .galeria .sig { right: 14px; }
+.miniaturas { display: flex; gap: 8px; padding: 10px; overflow-x: auto; background: var(--navy-2); }
+.miniaturas button { flex: none; width: 92px; height: 64px; border-radius: 10px; overflow: hidden; border: 2px solid transparent; padding: 0; opacity: .65; background: #000; }
+.miniaturas button[aria-current="true"] { border-color: #fff; opacity: 1; }
+.miniaturas img { width: 100%; height: 100%; object-fit: cover; }
+.ficha .cuerpo { padding: 28px clamp(20px, 4vw, 40px) 36px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+@media (max-width: 860px) { .ficha .cuerpo { grid-template-columns: 1fr; } }
+.ficha h2 { margin: 6px 0 4px; font: 800 clamp(26px, 3.4vw, 36px)/1.15 var(--titulos); color: var(--navy); }
+.ficha .precio-g { font: 800 32px var(--titulos); color: var(--navy); margin: 14px 0; }
+.ficha .datos { font-size: 15px; gap: 10px; }
+.ficha .datos span { background: var(--gris-3); border-radius: 12px; padding: 10px 14px; }
+.ficha h4 { margin: 24px 0 8px; font: 700 13px var(--titulos); letter-spacing: .2em; text-transform: uppercase; color: var(--slate); }
+.ficha .desc { white-space: pre-line; color: var(--texto); }
+.servs { display: flex; gap: 8px; flex-wrap: wrap; }
+.servs span { padding: 6px 12px; border-radius: 999px; background: var(--gris-2); color: var(--navy); font-size: 14px; font-weight: 600; }
+.lateral { display: grid; gap: 14px; align-content: start; }
+.caja-contacto { border: 1px solid var(--linea); border-radius: 20px; padding: 20px; display: grid; gap: 10px; }
+.caja-contacto b { font: 700 18px var(--titulos); color: var(--navy); }
+.caja-contacto p { margin: 0; color: var(--suave); font-size: 14px; }
+#mapa-ficha { height: 260px; border-radius: 16px; border: 1px solid var(--linea); }
+body.bloq { overflow: hidden; }
+:focus-visible { outline: 3px solid #8fa1d6; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header class="cab">
+  <div class="envoltura">
+    <a class="logo" href="#" aria-label="Beltrán Inmobiliaria, inicio"><img src="assets/logo.png" alt="Beltrán Inmobiliaria" width="125" height="44"></a>
+    <nav>
+      <a href="#propiedades">Propiedades</a>
+      <a href="#mapa-sec">Mapa</a>
+      <a href="#nosotros">Nosotros</a>
+      <a class="btn btn-wa wa-link" href="#contacto" data-msg="Hola, quisiera información sobre sus propiedades."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2zm-3.3 5.7c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.4-.3-2-1c-.3-.1-.5-.1-.7.2l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5h-.5z"/></svg>WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="envoltura">
+      <small>Puyo · Pastaza</small>
+      <h1>Encuentra la propiedad que estás buscando</h1>
+      <p>Casas, terrenos, departamentos y locales en venta, con fotos reales, precio claro y ubicación exacta.</p>
+      <form class="buscador" id="buscador">
+        <label>Tipo<select id="f-tipo"><option value="">Todos los tipos</option></select></label>
+        <label>Precio hasta<select id="f-precio"><option value="">Cualquier precio</option><option value="30000">$30.000</option><option value="60000">$60.000</option><option value="100000">$100.000</option><option value="150000">$150.000</option><option value="250000">$250.000</option><option value="500000">$500.000</option></select></label>
+        <label>Habitaciones<select id="f-hab"><option value="">Todas</option><option value="1">1 o más</option><option value="2">2 o más</option><option value="3">3 o más</option><option value="4">4 o más</option></select></label>
+        <button class="btn btn-prim" type="submit">Buscar</button>
+      </form>
+    </div>
+  </div>
+
+  <section id="propiedades">
+    <div class="envoltura">
+      <div class="sec-cab">
+        <div><h2>Propiedades</h2><p id="conteo">Cargando propiedades…</p></div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="grilla" id="grilla"><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div></div>
+    </div>
+  </section>
+
+  <section class="mapa-sec" id="mapa-sec">
+    <div class="envoltura">
+      <div class="sec-cab"><div><h2>Ubícalas en el mapa</h2><p>Toca un precio para ver la propiedad.</p></div></div>
+      <div id="mapa" aria-label="Mapa de propiedades"></div>
+    </div>
+  </section>
+
+  <section id="nosotros">
+    <div class="envoltura nosotros">
+      <div>
+        <h2>Beltrán Inmobiliaria</h2>
+        <p>Te acompañamos en todo el proceso de compra: desde la primera visita hasta la firma de la escritura en la notaría.</p>
+        <p>Cada propiedad que publicamos tiene sus papeles revisados y su ubicación verificada, para que compres con tranquilidad.</p>
+        <div class="puntos">
+          <div class="punto"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m8.5 12 2.4 2.4 4.6-4.8"/></svg></i><div><b>Documentos en regla</b>Revisamos escrituras, gravámenes y certificados antes de vender.</div></div>
+          <div class="punto"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></i><div><b>Ubicación exacta</b>Cada terreno está dibujado en el mapa con sus linderos.</div></div>
+          <div class="punto"><i><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 5h16v11H8l-4 4z"/></svg></i><div><b>Atención directa</b>Respondemos tus preguntas por WhatsApp y agendamos tu visita.</div></div>
+        </div>
+      </div>
+      <div class="marca"><img src="assets/icono.png" alt="" width="300" height="300"></div>
+    </div>
+  </section>
+
+  <section id="contacto" style="padding-top:0">
+    <div class="envoltura">
+      <div class="contacto">
+        <div><h2>¿Quieres vender o comprar una propiedad?</h2><p>Escríbenos y te ayudamos. También publicamos tu casa o terreno.</p></div>
+        <div class="acc"><a class="btn btn-wa wa-link" href="#" data-msg="Hola, quisiera vender/comprar una propiedad."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2zm-3.3 5.7c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.4-.3-2-1c-.3-.1-.5-.1-.7.2l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5h-.5z"/></svg>Escríbenos por WhatsApp</a><a class="btn btn-claro" id="correo-link" href="#" hidden>Enviar un correo</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <img src="assets/logo.png" alt="Beltrán Inmobiliaria" width="102" height="36">
+    <span>© <span id="anio"></span> Beltrán Inmobiliaria · Puyo, Pastaza, Ecuador</span>
+  </div>
+</footer>
+
+<div class="detalle" id="detalle" hidden role="dialog" aria-modal="true" aria-labelledby="d-titulo"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(() => {
+  const CFG = Object.assign({ proyecto: 'libro-de-cuentas-ce78b', sitio: 'beltran', whatsapp: '', correo: '' }, window.BELTRAN || {});
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  const usd = new Intl.NumberFormat('es-EC', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const ESTADO = { Disponible: 'Disponible', Reservada: 'Reservado', Vendida: 'Vendido' };
+  const SERV = { luz: 'Luz', agua: 'Agua potable', alcantarillado: 'Alcantarillado', internet: 'Internet', carretera: 'Vía asfaltada' };
+  const ICO = {
+    hab: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M3 18V8m0 6h18v4M21 18v-4a3 3 0 0 0-3-3h-7v3M7 12.5a1.5 1.5 0 1 0 0-.01"/></svg>',
+    ban: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round" d="M4 12h16v2a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/></svg>',
+    parq: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M5 16V11l2-5h10l2 5v5zM5 16v2M19 16v2M5 11h14"/><circle cx="8" cy="13.5" r=".9" fill="currentColor"/><circle cx="16" cy="13.5" r=".9" fill="currentColor"/></svg>',
+    area: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M4 10h6V4"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+  };
+  let props = [], filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas' }, mapa = null, capa = null;
+  $('anio').textContent = new Date().getFullYear();
+
+  // WhatsApp and e-mail links come from config.js
+  const waUrl = (msg) => CFG.whatsapp ? `https://wa.me/${String(CFG.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : '#contacto';
+  document.querySelectorAll('.wa-link').forEach((a) => { a.href = waUrl(a.dataset.msg || 'Hola'); if (CFG.whatsapp) { a.target = '_blank'; a.rel = 'noopener'; } });
+  if (CFG.correo) { const c = $('correo-link'); c.hidden = false; c.href = 'mailto:' + CFG.correo; }
+
+  // Firestore REST: public, read-only list kept in sync by the Beltrán app.
+  const valor = (v) => {
+    if (!v) return null;
+    if ('stringValue' in v) return v.stringValue;
+    if ('integerValue' in v) return Number(v.integerValue);
+    if ('doubleValue' in v) return Number(v.doubleValue);
+    if ('booleanValue' in v) return v.booleanValue;
+    if ('nullValue' in v) return null;
+    if ('arrayValue' in v) return (v.arrayValue.values || []).map(valor);
+    if ('mapValue' in v) return Object.fromEntries(Object.entries(v.mapValue.fields || {}).map(([k, x]) => [k, valor(x)]));
+    if ('timestampValue' in v) return v.timestampValue;
+    return null;
+  };
+  async function cargar() {
+    const url = `https://firestore.googleapis.com/v1/projects/${CFG.proyecto}/databases/(default)/documents/publico/${CFG.sitio}/propiedades?pageSize=300`;
+    try {
+      const r = await fetch(url, { cache: 'no-store' }); const j = await r.json();
+      props = (j.documents || []).map((d) => ({ id: d.name.split('/').pop(), ...Object.fromEntries(Object.entries(d.fields || {}).map(([k, x]) => [k, valor(x)])) }))
+        .sort((a, b) => (a.orden == null && b.orden == null ? String(b.creado || '').localeCompare(String(a.creado || '')) : a.orden == null ? -1 : b.orden == null ? 1 : a.orden - b.orden));
+      pintarFiltros(); pintar(); abrirDesdeUrl();
+    } catch (e) { $('conteo').textContent = 'No se pudieron cargar las propiedades. Revisa tu conexión.'; $('grilla').replaceChildren(); }
+  }
+  const visibles = () => props.filter((p) => (filtro.estado === 'activas' ? p.estado !== 'Vendida' : filtro.estado === 'Vendida' ? p.estado === 'Vendida' : true)
+    && (!filtro.tipo || p.tipo === filtro.tipo) && (!filtro.precio || (p.precio || 0) <= filtro.precio) && (!filtro.hab || (p.hab || 0) >= filtro.hab));
+  function pintarFiltros() {
+    const s = $('f-tipo'), v = s.value; const tipos = [...new Set(props.map((p) => p.tipo).filter(Boolean))];
+    s.replaceChildren(new Option('Todos los tipos', ''), ...tipos.map((t) => new Option(t, t))); s.value = v;
+    const ch = $('chips'), vend = props.some((p) => p.estado === 'Vendida');
+    const op = [['activas', 'En venta'], ...(vend ? [['Vendida', 'Vendidas']] : []), ['todas', 'Todas']];
+    ch.replaceChildren(...op.map(([k, t]) => { const b = el('button', 'chip', t); b.type = 'button'; b.setAttribute('aria-pressed', String(filtro.estado === k)); b.addEventListener('click', () => { filtro.estado = k; pintarFiltros(); pintar(); }); return b; }));
+  }
+  const datosHtml = (p) => [p.hab ? `<span>${ICO.hab}${p.hab} hab.</span>` : '', p.banos ? `<span>${ICO.ban}${p.banos} baño${p.banos === 1 ? '' : 's'}</span>` : '', p.parq ? `<span>${ICO.parq}${p.parq} parq.</span>` : '', p.area ? `<span>${ICO.area}${p.area.toLocaleString('es-EC')} m²</span>` : ''].join('');
+  const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function tarjeta(p) {
+    const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '')); a.href = '#p/' + p.id;
+    const fotos = p.fotos || [];
+    a.innerHTML = `<div class="foto">${fotos[0] ? `<img src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo)}" loading="lazy">` : '<div class="sin"><img src="assets/icono.png" alt=""></div>'}
+      <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'Disponible'}</span>${fotos.length > 1 ? `<span class="nfotos">${fotos.length} fotos</span>` : ''}</div>
+      <div class="info"><span class="tipo">${esc(p.tipo || 'Propiedad')}</span><h3>${esc(p.nombre || p.tipo || 'Propiedad en venta')}</h3>
+      ${p.dir ? `<span class="dir">${ICO.pin}${esc(p.dir)}</span>` : ''}<div class="datos">${datosHtml(p)}</div>
+      <div class="precio">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div></div>`;
+    return a;
+  }
+  function pintar() {
+    const vs = visibles();
+    $('conteo').textContent = props.length ? `${vs.length} propiedad${vs.length === 1 ? '' : 'es'}` : 'Muy pronto publicaremos nuestras propiedades.';
+    $('grilla').replaceChildren(...(vs.length ? vs.map(tarjeta) : [el('div', 'vacio', props.length ? 'No hay propiedades con esos filtros. Prueba con otros.' : 'Estamos preparando nuestras primeras propiedades. Escríbenos por WhatsApp y te avisamos.')]));
+    pintarMapa(vs);
+  }
+  function iniciarMapa() {
+    if (mapa || !window.L) return;
+    mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-1.4924, -78.0024], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapa);
+    capa = L.layerGroup().addTo(mapa);
+  }
+  function pintarMapa(vs) {
+    iniciarMapa(); if (!mapa) return; capa.clearLayers();
+    const con = vs.filter((p) => p.lat != null && p.lng != null);
+    con.forEach((p) => {
+      if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#4d5c85', weight: 2, fillOpacity: .18 }).addTo(capa);
+      const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
+      m.on('click', () => { location.hash = 'p/' + p.id; });
+    });
+    if (con.length) mapa.fitBounds(L.latLngBounds(con.map((p) => [p.lat, p.lng])).pad(.25), { maxZoom: 16 });
+  }
+  // Detail view (#p/<id>): gallery, data, description, services, map and WhatsApp.
+  let mapaFicha = null;
+  function abrir(p) {
+    const d = $('detalle'), fotos = p.fotos || []; let i = 0;
+    const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
+    d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
+      ${fotos.length ? `<div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}</div>
+      ${fotos.length > 1 ? `<div class="miniaturas">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" ${k ? '' : 'aria-current="true"'}><img src="${esc(f)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}` : ''}
+      <div class="cuerpo"><div>
+        <span class="estado ${esc(p.estado)}" style="position:static;display:inline-block">${ESTADO[p.estado] || 'Disponible'}</span>
+        <h2 id="d-titulo">${esc(p.nombre || p.tipo || 'Propiedad')}</h2>
+        ${p.dir ? `<div class="dir" style="color:var(--suave);display:flex;gap:6px;align-items:center">${ICO.pin}${esc(p.dir)}</div>` : ''}
+        <div class="precio-g">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div>
+        <div class="datos">${datosHtml(p)}</div>
+        ${p.desc ? `<h4>Descripción</h4><div class="desc">${esc(p.desc)}</div>` : ''}
+        ${(p.servicios || []).length ? `<h4>Servicios</h4><div class="servs">${p.servicios.map((s) => `<span>${esc(SERV[s] || s)}</span>`).join('')}</div>` : ''}
+      </div><div class="lateral">
+        <div class="caja-contacto"><b>¿Te interesa?</b><p>Escríbenos y agendamos una visita.</p>
+          <a class="btn btn-wa" href="${waUrl(msg)}" ${CFG.whatsapp ? 'target="_blank" rel="noopener"' : ''}>Preguntar por WhatsApp</a>
+          <button class="btn btn-claro" type="button" id="compartir" style="border:1px solid var(--linea)">Compartir</button></div>
+        ${p.lat != null ? '<div id="mapa-ficha"></div>' : ''}
+      </div></div></div>`;
+    d.hidden = false; document.body.classList.add('bloq');
+    const img = d.querySelector('.principal'), minis = [...d.querySelectorAll('.miniaturas button')];
+    const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); };
+    if (d.querySelector('.ant')) { d.querySelector('.ant').onclick = () => ir(i - 1); d.querySelector('.sig').onclick = () => ir(i + 1); }
+    minis.forEach((b, k) => { b.onclick = () => ir(k); });
+    if (img && fotos.length > 1) { let x0 = null; img.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true }); img.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(i + (dx < 0 ? 1 : -1)); x0 = null; }); }
+    d.querySelector('.cerrar').onclick = cerrar;
+    $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
+    if (p.lat != null && window.L) setTimeout(() => {
+      if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
+      mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 17);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapaFicha);
+      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#4d5c85', weight: 2, fillOpacity: .2 }).addTo(mapaFicha); mapaFicha.fitBounds(pg.getBounds().pad(.6)); }
+      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }) }).addTo(mapaFicha);
+    }, 50);
+    document.title = (p.nombre || p.tipo || 'Propiedad') + ' · Beltrán Inmobiliaria';
+    d.querySelector('.cerrar').focus();
+  }
+  function cerrar() { const d = $('detalle'); if (d.hidden) return; d.hidden = true; d.replaceChildren(); document.body.classList.remove('bloq'); document.title = 'Beltrán Inmobiliaria · Casas, terrenos y locales en Puyo'; if (location.hash.startsWith('#p/')) history.pushState('', '', location.pathname + location.search + '#propiedades'); }
+  function abrirDesdeUrl() { const m = location.hash.match(/^#p\/(.+)$/); if (!m) { cerrar(); return; } const p = props.find((x) => x.id === m[1]); if (p) abrir(p); }
+  window.addEventListener('hashchange', abrirDesdeUrl);
+  $('detalle').addEventListener('click', (e) => { if (e.target === $('detalle')) cerrar(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(); });
+  $('buscador').addEventListener('submit', (e) => { e.preventDefault(); filtro.tipo = $('f-tipo').value; filtro.precio = Number($('f-precio').value) || 0; filtro.hab = Number($('f-hab').value) || 0; pintar(); $('propiedades').scrollIntoView({ behavior: 'smooth' }); });
+  ['f-tipo', 'f-precio', 'f-hab'].forEach((id) => $(id).addEventListener('change', () => { filtro.tipo = $('f-tipo').value; filtro.precio = Number($('f-precio').value) || 0; filtro.hab = Number($('f-hab').value) || 0; pintar(); }));
+  cargar();
+  // Stay current: reload when the visitor comes back to the tab, and every 2 minutes.
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) cargar(); });
+  setInterval(() => { if (!document.hidden && $('detalle').hidden) cargar(); }, 120000);
+})();
+</script>
+</body>
+</html>
