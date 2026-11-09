@@ -80,6 +80,11 @@ section { padding: 72px 0; }
 .tarjeta .foto .sin img { width: 72px; height: auto; opacity: .35; }
 .estado { position: absolute; left: 14px; top: 14px; padding: 5px 12px; border-radius: 999px; font: 700 12px var(--cuerpo); letter-spacing: .04em; color: #fff; background: var(--ok); }
 .estado.Reservada { background: var(--res); } .estado.Vendida { background: var(--vend); }
+.pfotos { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; justify-content: center; gap: 2px; z-index: 2; }
+.pfotos button { width: 22px; height: 22px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; }
+.pfotos button::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.55); box-shadow: 0 1px 4px rgba(0,0,0,.35); transition: all .2s; }
+.pfotos button[aria-current="true"]::before { width: 12px; height: 12px; background: #fff; }
+.galeria .pfotos { bottom: 14px; }
 .nfotos { position: absolute; right: 12px; bottom: 12px; padding: 4px 10px; border-radius: 999px; background: rgba(22,28,53,.7); color: #fff; font-size: 12px; font-weight: 600; }
 .tarjeta .info { padding: 18px 20px 20px; display: grid; gap: 8px; flex: 1; }
 .tarjeta .tipo { font: 600 12px var(--titulos); letter-spacing: .2em; text-transform: uppercase; color: var(--slate); }
@@ -302,10 +307,13 @@ body.bloq { overflow: hidden; }
     const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '')); a.href = '#p/' + p.id;
     const fotos = p.fotos || [];
     a.innerHTML = `<div class="foto">${fotos[0] ? `<img src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo)}" loading="lazy">` : '<div class="sin"><img src="assets/icono.png" alt=""></div>'}
-      <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'Disponible'}</span>${fotos.length > 1 ? `<span class="nfotos">${fotos.length} fotos</span>` : ''}</div>
+      <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'Disponible'}</span>${fotos.length > 1 ? `<div class="pfotos">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
       <div class="info"><span class="tipo">${esc(p.tipo || 'Propiedad')}</span><h3>${esc(p.nombre || p.tipo || 'Propiedad en venta')}</h3>
       ${p.dir ? `<span class="dir">${ICO.pin}${esc(p.dir)}</span>` : ''}<div class="datos">${datosHtml(p)}</div>
       <div class="precio">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div></div>`;
+    // Dots change the photo on the card without opening the listing
+    const img = a.querySelector('.foto > img'), pts = [...a.querySelectorAll('.pfotos button')];
+    pts.forEach((b, k) => b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); img.src = fotos[k]; pts.forEach((x, j) => x.setAttribute('aria-current', String(j === k))); }));
     return a;
   }
   function pintar() {
@@ -336,7 +344,7 @@ body.bloq { overflow: hidden; }
     const d = $('detalle'), fotos = p.fotos || []; let i = 0;
     const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
-      ${fotos.length ? `<div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}</div>
+      ${fotos.length ? `<div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}${fotos.length > 1 ? `<div class="pfotos">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
       ${fotos.length > 1 ? `<div class="miniaturas">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" ${k ? '' : 'aria-current="true"'}><img src="${esc(f)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}` : ''}
       <div class="cuerpo"><div>
         <span class="estado ${esc(p.estado)}" style="position:static;display:inline-block">${ESTADO[p.estado] || 'Disponible'}</span>
@@ -353,10 +361,10 @@ body.bloq { overflow: hidden; }
         ${p.lat != null ? '<div id="mapa-ficha"></div>' : ''}
       </div></div></div>`;
     d.hidden = false; document.body.classList.add('bloq');
-    const img = d.querySelector('.principal'), minis = [...d.querySelectorAll('.miniaturas button')];
-    const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); };
+    const img = d.querySelector('.principal'), minis = [...d.querySelectorAll('.miniaturas button')], pts = [...d.querySelectorAll('.galeria .pfotos button')];
+    const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); pts.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); };
     if (d.querySelector('.ant')) { d.querySelector('.ant').onclick = () => ir(i - 1); d.querySelector('.sig').onclick = () => ir(i + 1); }
-    minis.forEach((b, k) => { b.onclick = () => ir(k); });
+    minis.concat(pts).forEach((b, k) => { b.onclick = () => ir(k % fotos.length); });
     if (img && fotos.length > 1) { let x0 = null; img.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true }); img.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(i + (dx < 0 ? 1 : -1)); x0 = null; }); }
     d.querySelector('.cerrar').onclick = cerrar;
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
