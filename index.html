@@ -237,6 +237,13 @@ body.bloq { overflow: hidden; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (() => {
+  // Satellite imagery with street names on top (Esri, free, no key)
+  function satelite(m) {
+    const E = 'https://server.arcgisonline.com/ArcGIS/rest/services/';
+    L.tileLayer(E + 'World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, maxNativeZoom: 19, attribution: 'Imágenes © Esri' }).addTo(m);
+    L.tileLayer(E + 'Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, opacity: .9 }).addTo(m);
+    L.tileLayer(E + 'Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(m);
+  }
   const CFG = Object.assign({ proyecto: 'libro-de-cuentas-ce78b', sitio: 'beltran', whatsapp: '', correo: '' }, window.BELTRAN || {});
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
@@ -310,14 +317,14 @@ body.bloq { overflow: hidden; }
   function iniciarMapa() {
     if (mapa || !window.L) return;
     mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-1.4924, -78.0024], 14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapa);
+    satelite(mapa);
     capa = L.layerGroup().addTo(mapa);
   }
   function pintarMapa(vs) {
     iniciarMapa(); if (!mapa) return; capa.clearLayers();
     const con = vs.filter((p) => p.lat != null && p.lng != null);
     con.forEach((p) => {
-      if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#4d5c85', weight: 2, fillOpacity: .18 }).addTo(capa);
+      if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(capa);
       const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
       m.on('click', () => { location.hash = 'p/' + p.id; });
     });
@@ -356,8 +363,8 @@ body.bloq { overflow: hidden; }
     if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
       mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 17);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapaFicha);
-      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#4d5c85', weight: 2, fillOpacity: .2 }).addTo(mapaFicha); mapaFicha.fitBounds(pg.getBounds().pad(.6)); }
+      satelite(mapaFicha);
+      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); mapaFicha.fitBounds(pg.getBounds().pad(.6)); }
       L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }) }).addTo(mapaFicha);
     }, 50);
     document.title = (p.nombre || p.tipo || 'Propiedad') + ' · Beltrán Inmobiliaria';
