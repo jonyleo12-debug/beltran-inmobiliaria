@@ -103,8 +103,11 @@ section { padding: 72px 0; }
 /* Map */
 .mapa-sec { background: #fff; }
 #mapa { height: 460px; border-radius: var(--radio); border: 1px solid var(--linea); z-index: 0; }
-.pin-precio { background: var(--navy); color: #fff; font: 700 12px var(--cuerpo); padding: 5px 10px; border-radius: 999px; white-space: nowrap; box-shadow: 0 6px 14px -6px rgba(0,0,0,.5); transform: translate(-50%, -50%); display: inline-block; border: 2px solid #fff; }
-.pin-precio.Vendida { background: var(--vend); } .pin-precio.Reservada { background: var(--res); }
+.pin-casa { position: absolute; left: 0; top: 0; transform: translate(-17px, -39px); display: flex; align-items: flex-start; white-space: nowrap; cursor: pointer; }
+.pin-casa svg { flex: none; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); transition: transform .12s; transform-origin: 17px 39px; }
+.pin-casa .pill-t { margin: 3px 0 0 -3px; background: #fff; color: #1b1b1d; font: 700 12.5px var(--cuerpo); padding: 4px 9px; border-radius: 999px; box-shadow: 0 2px 8px rgba(0,0,0,.28); transition: background .12s, color .12s; }
+.pin-casa:hover { z-index: 2; } .pin-casa:hover svg { transform: scale(1.15); } .pin-casa:hover .pill-t { background: #2e51a1; color: #fff; }
+.pin-casa.Vendida .pill-t { background: #ddd; color: #666; }
 
 /* About + contact */
 .nosotros { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
@@ -346,7 +349,18 @@ body.bloq { overflow: hidden; }
     pintarMapa(visibles());
   }
   let gCosas = [];
-  const htmlPin = (p) => `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`;
+  // House-style pins like the app: colored drop with the type glyph + short price ($145k)
+  const GLIFOS = {
+    'Casa': 'M4 11.6 12 4.8l8 6.8V20a1 1 0 0 1-1 1h-4.6v-5.2H9.6V21H5a1 1 0 0 1-1-1z',
+    'Departamento': 'M5 3h14v18h-5v-4h-4v4H5zM8 6v3h3V6zm5 0v3h3V6zm-5 5v3h3v-3zm5 0v3h3v-3z',
+    'Terreno': 'M7.5 2a4.3 4.3 0 0 1 4.3 4.3c0 2.9-4.3 7.3-4.3 7.3S3.2 9.2 3.2 6.3A4.3 4.3 0 0 1 7.5 2zm0 2.6a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4zM3.6 11.6H5l2.5 3.3 2.5-3.3 1.2-1.6h9l.3 2.2h-4V16H2.9zM3 17h8v5H2.2zm9.2 0h5.4v-3.7h3.1L22 22h-9.8z',
+    'Local comercial': 'M3 9 5 4h14l2 5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zm2 4.2h14V21h-5v-5h-4v5H5z',
+    'Oficina': 'M9 4h6a1 1 0 0 1 1 1v2h4a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4V5a1 1 0 0 1 1-1zm1 1.8V7h4V5.8zM3 12.5h18v1.6H3z',
+    'Otro': 'M12 2.8l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.6l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z'
+  };
+  const PIN_COLOR = { Vendida: '#8a8a8a', Reservada: '#c9952b' };
+  const precioCorto = (n) => n >= 10000 ? '$' + (Math.round(n / 100) / 10).toString().replace('.', ',') + 'k' : usd.format(n);
+  const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
   function pinG(m, p, click) {
     const o = new google.maps.OverlayView(), pos = new google.maps.LatLng(p.lat, p.lng);
     o.onAdd = function () { const d = document.createElement('div'); d.style.cssText = 'position:absolute;cursor:pointer'; d.innerHTML = htmlPin(p); d.title = p.nombre || p.tipo || ''; if (click) d.addEventListener('click', click); this.div = d; this.getPanes().overlayMouseTarget.appendChild(d); };
@@ -355,9 +369,10 @@ body.bloq { overflow: hidden; }
     o.setMap(m); return o;
   }
   function poligonoG(m, p) {
-    return new google.maps.Polygon({ map: m, paths: p.poligono.map((q) => ({ lat: q.lat, lng: q.lng })), strokeColor: '#ffffff', strokeWeight: 2, fillColor: '#4d5c85', fillOpacity: .35, clickable: false });
+    return new google.maps.Polygon({ map: m, paths: p.poligono.map((q) => ({ lat: q.lat, lng: q.lng })), strokeColor: '#2e51a1', strokeWeight: 2, fillColor: '#2e51a1', fillOpacity: .3, clickable: false });
   }
-  const opcG = { mapTypeControl: true, mapTypeControlOptions: { mapTypeIds: ['roadmap', 'hybrid'] }, streetViewControl: false, gestureHandling: 'cooperative', clickableIcons: false };
+  const LIMPIO = [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }, { featureType: 'transit', stylers: [{ visibility: 'off' }] }, { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] }, { featureType: 'landscape', stylers: [{ saturation: -60 }, { lightness: 20 }] }, { featureType: 'water', stylers: [{ saturation: -30 }, { lightness: 10 }] }];
+  const opcG = { styles: LIMPIO, mapTypeControl: true, mapTypeControlOptions: { mapTypeIds: ['roadmap', 'hybrid'] }, streetViewControl: false, gestureHandling: 'cooperative', clickableIcons: false };
   async function pintarMapaG(vs) {
     if (!mapa) mapa = new google.maps.Map($('mapa'), Object.assign({ center: { lat: -1.4924, lng: -78.0024 }, zoom: 14 }, opcG));
     gCosas.forEach((c) => c.setMap(null)); gCosas = [];
@@ -382,7 +397,7 @@ body.bloq { overflow: hidden; }
     const con = vs.filter((p) => p.lat != null && p.lng != null);
     con.forEach((p) => {
       if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(capa);
-      const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
+      const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
       m.on('click', () => { location.hash = 'p/' + p.id; });
     });
     if (con.length) mapa.fitBounds(L.latLngBounds(con.map((p) => [p.lat, p.lng])).pad(.25), { maxZoom: 16 });
@@ -418,7 +433,7 @@ body.bloq { overflow: hidden; }
     d.querySelector('.cerrar').onclick = cerrar;
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
     if (p.lat != null && gEstado === 'si') setTimeout(() => {
-      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 17, mapTypeId: 'hybrid' }, opcG));
+      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 17 }, opcG));
       if ((p.poligono || []).length > 2) { poligonoG(m, p); const b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); m.fitBounds(b, 40); }
       pinG(m, p);
     }, 50);
@@ -427,7 +442,7 @@ body.bloq { overflow: hidden; }
       mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 17);
       satelite(mapaFicha);
       if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); mapaFicha.fitBounds(pg.getBounds().pad(.6)); }
-      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<span class="pin-precio ${esc(p.estado)}">${p.precio ? usd.format(p.precio) : esc(p.tipo)}</span>`, iconSize: [0, 0] }) }).addTo(mapaFicha);
+      L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }) }).addTo(mapaFicha);
     }, 50);
     document.title = (p.nombre || p.tipo || 'Propiedad') + ' · Beltrán Inmobiliaria';
     d.querySelector('.cerrar').focus();
