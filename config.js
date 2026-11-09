@@ -5,5 +5,5 @@ window.BELTRAN = {
   whatsapp: '593979269302',
   correo: '',
   // Clave de Google Maps solo para esta página (restringida a jonyleo12-debug.github.io). Vacía = mapa satélite gratis.
-  gmapsKey: ''
+  gmapsKey: 'AIzaSyD8bd2dwCk5fX03gDldDfof1skf81ySl28'
 };
