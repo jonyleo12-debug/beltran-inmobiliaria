@@ -357,6 +357,15 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 @keyframes cambiaFoto { from { opacity: 0; transform: scale(1.06); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 @media (min-width: 761px) { .ficha:has(.gal2:not(.sola)) > .cerrar { right: 266px; top: 24px; } }
 @media (max-width: 760px) { .gal2 { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) 84px; height: 470px; padding: 6px; gap: 6px; } .lado { flex-direction: row; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; } .lf { flex: 0 0 112px; } .gal2 .p-tit { font-size: 34px; } }
+
+.gal2.inicio { grid-template-columns: 1fr; }
+.gal2.inicio .lado { display: none; }
+.gal2:not(.inicio) .p-tit { display: none; }
+.gal2:not(.inicio) .lado { animation: ladoEntra .6s var(--suavizado) both; }
+@keyframes ladoEntra { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: none; } }
+.gal2.inicio .ant { visibility: hidden; }
+@media (min-width: 761px) { .ficha:has(.gal2.inicio) > .cerrar { right: 16px; top: 16px; } }
+@media (max-width: 760px) { .gal2.inicio { grid-template-rows: 1fr; } }
 </style>
 </head>
 <body>
@@ -662,7 +671,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     const d = $('detalle'), fotos = p.fotos || []; let i = 0;
     const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
-      ${fotos.length ? `<div class="gal2${fotos.length > 1 ? '' : ' sola'}"><div class="portada"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo || '')}"><span class="p-tit">${esc(p.nombre || p.tipo || 'Propiedad')}</span>${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button><span class="p-num"><b>01</b> / ${String(fotos.length).padStart(2, '0')}</span>` : ''}<span class="p-pie"><span>${esc(lugar(p))}</span><span>${p.precio ? usd.format(p.precio) : ''}</span></span></div>${fotos.length > 1 ? `<div class="lado">${fotos.slice(1).map((f, j) => `<button type="button" class="lf" data-pos="${j + 1}" aria-label="Ver foto"><img src="${esc(f)}" alt="" loading="lazy"><i>${String(j + 2).padStart(2, '0')}</i></button>`).join('')}</div>` : ''}</div>` : ''}
+      ${fotos.length ? `<div class="gal2 inicio"><div class="portada"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo || '')}"><span class="p-tit">${esc(p.nombre || p.tipo || 'Propiedad')}</span>${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>` : ''}<span class="p-pie"><span>${esc(lugar(p))}</span><span>${p.precio ? usd.format(p.precio) : ''}</span></span></div>${fotos.length > 2 ? `<div class="lado">${fotos.slice(2).map((f, j) => `<button type="button" class="lf" data-pos="${j + 1}" aria-label="Ver foto"><img src="${esc(f)}" alt="" loading="${j < 3 ? 'eager' : 'lazy'}"></button>`).join('')}</div>` : ''}</div>` : ''}
       <div class="cuerpo"><div>
         <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>
         <h2 id="d-titulo">${esc(p.nombre || p.tipo || 'Propiedad')}</h2>
@@ -679,13 +688,14 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
         ${p.lat != null ? '<div id="mapa-ficha"></div>' : ''}
       </div></div></div>`;
     d.hidden = false; document.body.classList.add('bloq');
-    const img = d.querySelector('.principal'), minis = [], pts = [], num = d.querySelector('.p-num b');
-    const ord = fotos.map((f, k) => k), lfs = [...d.querySelectorAll('.lf')];
-    const pintarG = (cambiadas) => { img.src = fotos[ord[0]]; if (num) num.textContent = String(ord[0] + 1).padStart(2, '0'); img.classList.remove('cambio'); void img.offsetWidth; img.classList.add('cambio');
-      lfs.forEach((b, j) => { const k = ord[j + 1], im = b.querySelector('img'); if (im.getAttribute('src') !== fotos[k]) { im.src = fotos[k]; b.querySelector('i').textContent = String(k + 1).padStart(2, '0'); if (cambiadas) { b.classList.remove('entra'); void b.offsetWidth; b.classList.add('entra'); } } }); };
-    const paso = (s) => { if (s > 0) ord.push(ord.shift()); else ord.unshift(ord.pop()); pintarG(true); };
+    const img = d.querySelector('.principal'), minis = [], pts = [], gal = d.querySelector('.gal2');
+    const ord = fotos.map((f, k) => k).slice(1), lfs = [...d.querySelectorAll('.lf')]; let pasos = 0;
+    const pintarG = () => { const portada = gal.classList.contains('inicio'); img.src = fotos[portada ? 0 : ord[0]]; img.classList.remove('cambio'); void img.offsetWidth; img.classList.add('cambio');
+      lfs.forEach((b, j) => { const im = b.querySelector('img'), f = fotos[ord[j + 1]]; if (im.getAttribute('src') !== f) { im.src = f; b.classList.remove('entra'); void b.offsetWidth; b.classList.add('entra'); } }); };
+
+    const paso = (s) => { if (!gal) return; if (gal.classList.contains('inicio')) { if (s > 0) { gal.classList.remove('inicio'); pasos = 0; pintarG(); } return; } if (s < 0 && pasos <= 0) { gal.classList.add('inicio'); pintarG(); return; } pasos += s; if (s > 0) ord.push(ord.shift()); else ord.unshift(ord.pop()); pintarG(); };
     const ir = (n) => paso(n > i ? 1 : -1);
-    lfs.forEach((b) => b.addEventListener('click', () => { const j = Number(b.dataset.pos); [ord[0], ord[j]] = [ord[j], ord[0]]; pintarG(true); }));
+    lfs.forEach((b) => b.addEventListener('click', () => { const j = Number(b.dataset.pos); [ord[0], ord[j]] = [ord[j], ord[0]]; pintarG(); }));
     if (d.querySelector('.ant')) { d.querySelector('.ant').onclick = () => ir(i - 1); d.querySelector('.sig').onclick = () => ir(i + 1); }
 
     if (img && fotos.length > 1) { let x0 = null; img.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true }); img.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(i + (dx < 0 ? 1 : -1)); x0 = null; }); }
