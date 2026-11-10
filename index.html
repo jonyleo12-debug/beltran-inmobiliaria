@@ -302,6 +302,26 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 }
 @media (max-width: 560px) { .valores { grid-template-columns: 1fr; } .envoltura { width: calc(100% - 32px); } .hero-acc .btn { flex: 1; } .grilla { grid-template-columns: 1fr; } .arriba { display: none; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .rev { opacity: 1; transform: none; } html { scroll-behavior: auto; } }
+
+/* Photo mosaic in the listing + full-screen viewer */
+.mosaico { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 150px; gap: 8px; padding: 8px; background: #070a18; }
+.mf { position: relative; padding: 0; border: 0; overflow: hidden; border-radius: 12px; background: #131a38; grid-column: span 2; }
+.mf img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--suavizado), filter .3s; }
+.mf:hover img { transform: scale(1.06); filter: brightness(1.08); }
+.mf span { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(11,16,36,.6); font: 500 34px var(--display); color: #fff; }
+.mosaico .mf:nth-child(1) { grid-column: 1 / -1; grid-row: span 2; }
+.mosaico .mf:nth-child(2) { grid-column: span 4; grid-row: span 2; }
+.mosaico .mf:nth-child(3) { grid-column: span 2; grid-row: span 2; }
+.m2 .mf:nth-child(2) { grid-column: 1 / -1; }
+.m3 .mf:nth-child(2), .m3 .mf:nth-child(3) { grid-column: span 3; }
+.m4 .mf:nth-child(4), .m7 .mf:nth-child(7) { grid-column: 1 / -1; }
+.m5 .mf:nth-child(4), .m5 .mf:nth-child(5), .m8 .mf:nth-child(7), .m8 .mf:nth-child(8) { grid-column: span 3; }
+.mf { animation: entra .6s var(--suavizado) both; } .mf:nth-child(2) { animation-delay: .06s; } .mf:nth-child(3) { animation-delay: .12s; } .mf:nth-child(n+4) { animation-delay: .18s; }
+.visor { position: fixed; inset: 0; z-index: 120; background: rgba(4,6,15,.94); display: grid; place-items: center; padding: 20px; animation: aparece .25s both; }
+.visor .galeria { background: none; width: min(1300px, 100%); }
+.visor .principal { aspect-ratio: auto; max-height: 86vh; width: 100%; object-fit: contain; border-radius: 12px; }
+.visor .cuenta { text-align: center; color: var(--suave); margin-top: 10px; font-size: 14px; }
+@media (max-width: 760px) { .mosaico { grid-auto-rows: 95px; gap: 5px; padding: 5px; } .visor .flecha { top: auto; bottom: -6px; } }
 </style>
 </head>
 <body>
@@ -607,8 +627,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     const d = $('detalle'), fotos = p.fotos || []; let i = 0;
     const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
-      ${fotos.length ? `<div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}${fotos.length > 1 ? `<div class="pfotos">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
-      ${fotos.length > 1 ? `<div class="miniaturas">${fotos.map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" ${k ? '' : 'aria-current="true"'}><img src="${esc(f)}" alt="" loading="lazy"></button>`).join('')}</div>` : ''}` : ''}
+      ${fotos.length ? `<div class="mosaico m${Math.min(fotos.length, 9)}">${fotos.slice(0, 9).map((f, k) => `<button type="button" class="mf" data-k="${k}" aria-label="Ver foto ${k + 1}"><img src="${esc(f)}" alt="" loading="${k < 3 ? 'eager' : 'lazy'}">${k === 8 && fotos.length > 9 ? `<span>+${fotos.length - 9}</span>` : ''}</button>`).join('')}</div>
+      <div class="visor" hidden><button class="cerrar cv" type="button" aria-label="Cerrar foto">×</button><div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}<div class="cuenta"></div></div></div>` : ''}
       <div class="cuerpo"><div>
         <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>
         <h2 id="d-titulo">${esc(p.nombre || p.tipo || 'Propiedad')}</h2>
@@ -624,8 +644,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
         ${p.lat != null ? '<div id="mapa-ficha"></div>' : ''}
       </div></div></div>`;
     d.hidden = false; document.body.classList.add('bloq');
-    const img = d.querySelector('.principal'), minis = [...d.querySelectorAll('.miniaturas button')], pts = [...d.querySelectorAll('.galeria .pfotos button')];
-    const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); pts.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); };
+    const img = d.querySelector('.principal'), minis = [], pts = [], visor = d.querySelector('.visor');
+    const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); if (visor) visor.querySelector('.cuenta').textContent = (i + 1) + ' / ' + fotos.length; };
+    d.querySelectorAll('.mf').forEach((b) => b.addEventListener('click', () => { visor.hidden = false; ir(Number(b.dataset.k)); }));
+    if (visor) { visor.querySelector('.cv').onclick = () => { visor.hidden = true; }; visor.addEventListener('click', (e) => { if (e.target === visor) visor.hidden = true; }); }
     if (d.querySelector('.ant')) { d.querySelector('.ant').onclick = () => ir(i - 1); d.querySelector('.sig').onclick = () => ir(i + 1); }
     minis.concat(pts).forEach((b, k) => { b.onclick = () => ir(k % fotos.length); });
     if (img && fotos.length > 1) { let x0 = null; img.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true }); img.addEventListener('touchend', (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) ir(i + (dx < 0 ? 1 : -1)); x0 = null; }); }
@@ -670,7 +692,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   const flota = document.querySelector('.wa-flota');
   setTimeout(() => flota.classList.add('ver'), 1400);
   $('detalle').addEventListener('click', (e) => { if (e.target === $('detalle')) cerrar(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { cerrar(); document.body.classList.remove('menu'); } else if (teclaGal && !$('detalle').hidden) teclaGal(e); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { const v = document.querySelector('.visor:not([hidden])'); if (v) { v.hidden = true; return; } cerrar(); document.body.classList.remove('menu'); } else if (teclaGal && document.querySelector('.visor:not([hidden])')) teclaGal(e); });
   $('buscador').addEventListener('submit', (e) => { e.preventDefault(); filtro.tipo = $('f-tipo').value; filtro.precio = Number($('f-precio').value) || 0; filtro.hab = Number($('f-hab').value) || 0; pintar(); $('propiedades').scrollIntoView({ behavior: 'smooth' }); });
   ['f-tipo', 'f-precio', 'f-hab'].forEach((id) => $(id).addEventListener('change', () => { filtro.tipo = $('f-tipo').value; filtro.precio = Number($('f-precio').value) || 0; filtro.hab = Number($('f-hab').value) || 0; pintar(); }));
   cargar();
