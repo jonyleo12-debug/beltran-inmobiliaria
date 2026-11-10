@@ -322,6 +322,20 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .visor .principal { aspect-ratio: auto; max-height: 86vh; width: 100%; object-fit: contain; border-radius: 12px; }
 .visor .cuenta { text-align: center; color: var(--suave); margin-top: 10px; font-size: 14px; }
 @media (max-width: 760px) { .mosaico { grid-auto-rows: 95px; gap: 5px; padding: 5px; } .visor .flecha { top: auto; bottom: -6px; } }
+
+.portada { position: relative; display: block; width: 100%; padding: 0; border: 0; height: clamp(320px, 62vh, 620px); overflow: hidden; background: #070a18; text-align: left; }
+.portada img { width: 100%; height: 100%; object-fit: cover; animation: acercar 12s ease-out both; }
+.portada::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,10,24,.55) 0%, rgba(7,10,24,0) 35%, rgba(7,10,24,0) 55%, rgba(7,10,24,.85) 100%); }
+.p-tit { position: absolute; z-index: 1; left: clamp(18px, 4vw, 40px); right: 70px; top: clamp(20px, 4vw, 34px); font: 700 clamp(38px, 8vw, 104px)/.92 var(--titulos); letter-spacing: -.02em; text-transform: uppercase; color: #fff; animation: entra .8s var(--suavizado) both; }
+.p-pie { position: absolute; z-index: 1; left: clamp(18px, 4vw, 40px); right: clamp(18px, 4vw, 40px); bottom: 22px; display: flex; justify-content: space-between; gap: 16px; align-items: end; font: 600 13px var(--titulos); letter-spacing: .16em; text-transform: uppercase; color: #e3e6f2; animation: entra .8s .2s var(--suavizado) both; }
+.p-pie span:last-child { font: 500 clamp(22px, 3vw, 32px) var(--cuerpo); letter-spacing: 0; color: #fff; }
+.mf i { position: absolute; z-index: 1; left: 12px; bottom: 8px; font: 500 30px/1 var(--titulos); font-style: normal; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+.plano { border: 1px solid var(--linea); border-radius: 16px; overflow: hidden; }
+.plano > div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 16px; border-top: 1px solid var(--linea); color: #d6dae9; font-size: 15px; }
+.plano > div:first-child { border-top: 0; }
+.plano b { font-weight: 500; color: #fff; white-space: nowrap; }
+.plano .plano-total { background: var(--vidrio); font: 600 12px var(--titulos); letter-spacing: .18em; text-transform: uppercase; color: var(--acento); align-items: center; }
+.plano .plano-total b { font: 500 18px var(--cuerpo); letter-spacing: 0; text-transform: none; }
 </style>
 </head>
 <body>
@@ -627,7 +641,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     const d = $('detalle'), fotos = p.fotos || []; let i = 0;
     const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
-      ${fotos.length ? `<div class="mosaico m${Math.min(fotos.length, 9)}">${fotos.slice(0, 9).map((f, k) => `<button type="button" class="mf" data-k="${k}" aria-label="Ver foto ${k + 1}"><img src="${esc(f)}" alt="" loading="${k < 3 ? 'eager' : 'lazy'}">${k === 8 && fotos.length > 9 ? `<span>+${fotos.length - 9}</span>` : ''}</button>`).join('')}</div>
+      ${fotos.length ? `<button type="button" class="portada mf0" data-k="0" aria-label="Ver foto 1"><img src="${esc(fotos[0])}" alt=""><span class="p-tit">${esc(p.nombre || p.tipo || 'Propiedad')}</span><span class="p-pie"><span>${esc(lugar(p))}</span><span>${p.precio ? usd.format(p.precio) : ''}</span></span></button>
+      ${fotos.length > 1 ? `<div class="mosaico m${Math.min(fotos.length - 1, 9)}">${fotos.slice(1, 10).map((f, k) => `<button type="button" class="mf" data-k="${k + 1}" aria-label="Ver foto ${k + 2}"><img src="${esc(f)}" alt="" loading="lazy"><i>${String(k + 1).padStart(2, '0')}</i>${k === 8 && fotos.length > 10 ? `<span>+${fotos.length - 10}</span>` : ''}</button>`).join('')}</div>` : ''}
       <div class="visor" hidden><button class="cerrar cv" type="button" aria-label="Cerrar foto">×</button><div class="galeria"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre)}">${fotos.length > 1 ? '<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>' : ''}<div class="cuenta"></div></div></div>` : ''}
       <div class="cuerpo"><div>
         <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>
@@ -636,6 +651,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
         <div class="precio-g">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div>
         <div class="datos">${datosHtml(p)}</div>
         ${p.desc ? `<h4>Descripción</h4><div class="desc">${esc(p.desc)}</div>` : ''}
+        ${(p.ambientes || []).length ? `<h4>Distribución</h4><div class="plano"><div class="plano-total">Área total <b>${(p.area || p.ambientes.reduce((t, a) => t + (a.m2 || 0), 0)).toLocaleString('es-EC')} m²</b></div>${p.ambientes.map((a) => `<div><span>${esc(a.nombre)}</span><b>${a.m2 ? a.m2.toLocaleString('es-EC') + ' m²' : ''}</b></div>`).join('')}</div>` : ''}
         ${(p.servicios || []).length ? `<h4>Servicios</h4><div class="servs">${p.servicios.map((s) => `<span>${esc(SERV[s] || s)}</span>`).join('')}</div>` : ''}
       </div><div class="lateral">
         <div class="caja-contacto"><b>¿Te interesa?</b><p>Escríbenos y agendamos una visita.</p>
@@ -646,7 +662,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     d.hidden = false; document.body.classList.add('bloq');
     const img = d.querySelector('.principal'), minis = [], pts = [], visor = d.querySelector('.visor');
     const ir = (n) => { i = (n + fotos.length) % fotos.length; img.src = fotos[i]; minis.forEach((b, k) => b.setAttribute('aria-current', String(k === i))); if (visor) visor.querySelector('.cuenta').textContent = (i + 1) + ' / ' + fotos.length; };
-    d.querySelectorAll('.mf').forEach((b) => b.addEventListener('click', () => { visor.hidden = false; ir(Number(b.dataset.k)); }));
+    d.querySelectorAll('.mf, .mf0').forEach((b) => b.addEventListener('click', () => { visor.hidden = false; ir(Number(b.dataset.k)); }));
     if (visor) { visor.querySelector('.cv').onclick = () => { visor.hidden = true; }; visor.addEventListener('click', (e) => { if (e.target === visor) visor.hidden = true; }); }
     if (d.querySelector('.ant')) { d.querySelector('.ant').onclick = () => ir(i - 1); d.querySelector('.sig').onclick = () => ir(i + 1); }
     minis.concat(pts).forEach((b, k) => { b.onclick = () => ir(k % fotos.length); });
