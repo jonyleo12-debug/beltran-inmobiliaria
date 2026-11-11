@@ -416,6 +416,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-ptit { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); top: clamp(22px, 4vw, 36px); font: 700 clamp(38px, 5.6vw, 84px)/.92 var(--titulos); letter-spacing: -.02em; text-transform: uppercase; animation: entra .8s var(--suavizado) both; }
 .sp-ppie { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); bottom: 24px; display: flex; justify-content: space-between; align-items: end; gap: 16px; font: 600 13px var(--titulos); letter-spacing: .16em; text-transform: uppercase; color: #e3e6f2; animation: entra .8s .2s var(--suavizado) both; }
 .sp-ppie span:last-child { font: 500 clamp(22px, 2.6vw, 32px) var(--cuerpo); letter-spacing: 0; color: #fff; }
+.sp-img.quieto::after { animation: none; transform: none; }
 .sp-pts { position: absolute; left: clamp(20px, 4vw, 40px); bottom: 58px; display: flex; gap: 8px; z-index: 2; animation: entra .8s .3s var(--suavizado) both; }
 .sp-pts button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 9px; background: rgba(255,255,255,.5); cursor: pointer; transition: width .3s, background .3s; }
 .sp-pts button[aria-current="true"] { width: 26px; background: #fff; }
@@ -851,7 +852,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   function verSp(p, a) {
     const img = $('sp-img'), f = (p.fotos || [])[0];
     $('sp-car').querySelectorAll('.sp-t').forEach((x) => x.classList.toggle('activa', x === a));
-    img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia');
+    img.classList.remove('cambia', 'quieto'); void img.offsetWidth; img.classList.add('cambia');
     if (f) img.style.backgroundImage = `url("${f.replace(/"/g, '%22')}")`;
     img.classList.add('prop'); const q = $('sp-prop'); q.hidden = false; q.href = '#p/' + p.id;
     $('sp-ptit').textContent = p.nombre || p.tipo || 'Propiedad';
@@ -859,7 +860,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     $('sp-ppre').textContent = p.precio ? usd.format(p.precio) : '';
     const fs = (p.fotos || []).slice(0, 10), pts = $('sp-pts');
     pts.replaceChildren(...(fs.length > 1 ? fs.map((u, k) => { const b = el('button'); b.type = 'button'; b.setAttribute('aria-label', 'Foto ' + (k + 1)); b.setAttribute('aria-current', String(k === 0));
-      b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); img.style.backgroundImage = `url("${u.replace(/"/g, '%22')}")`; img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia'); pts.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-current', String(j === k))); }); return b; }) : []));
+      b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); img.style.backgroundImage = `url("${u.replace(/"/g, '%22')}")`; img.classList.remove('cambia'); img.classList.toggle('quieto', k > 0); void img.offsetWidth; if (k === 0) img.classList.add('cambia'); pts.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-current', String(j === k))); }); return b; }) : []));
   }
   function marcarSp() { const car = $('sp-car'), w = car.firstElementChild ? car.firstElementChild.offsetWidth + 14 : 1, n = car.children.length || 1, k = Math.min(n - 1, Math.round(car.scrollLeft / w)); $('sp-n1').textContent = String(k + 1).padStart(2, '0'); $('sp-bar').style.width = ((k + 1) / n * 100) + '%'; }
   if ($('sp-car')) {
