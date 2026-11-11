@@ -366,6 +366,13 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .gal2.inicio .ant { visibility: hidden; }
 @media (min-width: 761px) { .ficha:has(.gal2.inicio) > .cerrar { right: 16px; top: 16px; } }
 @media (max-width: 760px) { .gal2.inicio { grid-template-rows: 1fr; } }
+
+/* Slow zoom on the cover photo only */
+@keyframes zoomPortada { from { transform: scale(1); } to { transform: scale(1.08); } }
+.gal2.inicio .portada img { animation: zoomPortada 9s ease-out both; }
+.gal2.inicio .portada img.cambio { animation: cambiaFoto .6s var(--suavizado) both, zoomPortada 9s .6s ease-out both; }
+.portada { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .gal2.inicio .portada img { animation: none !important; } }
 </style>
 </head>
 <body>
