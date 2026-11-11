@@ -409,6 +409,12 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-t { flex: 0 0 min(230px, 70%); scroll-snap-align: start; }
 .sp-t .datos { flex-wrap: nowrap; gap: 10px; font-size: 12px; } .sp-t .info { padding: 12px 14px 14px; gap: 6px; } .sp-t h3 { font-size: 14px; margin: 0; } .sp-t .dir { font-size: 11.5px; } .sp-t .precio { font-size: 16px; padding-top: 10px; } .sp-t .foto { aspect-ratio: 16 / 11; } .sp-t .estado { font-size: 9px; } .sp-t .datos svg { width: 13px; height: 13px; }
 .sp-t.activa { border-color: var(--acento); }
+.sp-img.prop > :not(.sp-prop) { display: none !important; }
+.sp-prop { position: absolute; inset: 0; z-index: 1; text-decoration: none; color: #fff; }
+.sp-img.prop::before { background: linear-gradient(180deg, rgba(11,16,36,.45), transparent 35%, transparent 70%, rgba(11,16,36,.6)); }
+.sp-ptit { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); top: clamp(22px, 4vw, 36px); font: 700 clamp(38px, 5.6vw, 84px)/.92 var(--titulos); letter-spacing: -.02em; text-transform: uppercase; animation: entra .8s var(--suavizado) both; }
+.sp-ppie { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); bottom: 24px; display: flex; justify-content: space-between; align-items: end; gap: 16px; font: 600 13px var(--titulos); letter-spacing: .16em; text-transform: uppercase; color: #e3e6f2; animation: entra .8s .2s var(--suavizado) both; }
+.sp-ppie span:last-child { font: 500 clamp(22px, 2.6vw, 32px) var(--cuerpo); letter-spacing: 0; color: #fff; }
 .sp-card.activa { outline: 2px solid var(--acento); outline-offset: -2px; }
 .sp-img { transition: background-image .6s; } .sp-img.cambia > * { animation: entra .6s var(--suavizado) both; } .sp-img.cambia::after { animation: acercar 9s ease-out both; }
 .sp-car::-webkit-scrollbar { display: none; }
@@ -456,6 +462,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       <h1 id="sp-h1"><span><i>Encuentra tu</i></span><span><i><em>lugar</em></i></span><span><i>en Puyo.</i></span></h1>
       <p class="bajada" id="sp-baj">Propiedades verificadas. Precios claros. Te acompañamos hasta la escritura.</p>
       <a class="btn btn-acento" id="sp-btn" href="#propiedades"><b id="sp-btxt" style="font-weight:inherit">Ver propiedades</b><span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
+      <a class="sp-prop" id="sp-prop" hidden><span class="sp-ptit" id="sp-ptit"></span><span class="sp-ppie"><span id="sp-plug"></span><span id="sp-ppre"></span></span></a>
       <div class="sp-cont"><b id="sp-n1">01</b><i><s id="sp-bar"></s></i><b id="sp-n2">01</b></div>
     </div>
     <div class="sp-panel">
@@ -842,11 +849,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     $('sp-car').querySelectorAll('.sp-t').forEach((x) => x.classList.toggle('activa', x === a));
     img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia');
     if (f) img.style.backgroundImage = `url("${f.replace(/"/g, '%22')}")`;
-    $('sp-ceja').textContent = [p.tipo, p.estado === 'Reservada' ? 'Reservada' : 'En venta'].filter(Boolean).join(' · ');
-    const pal = String(p.nombre || p.tipo || 'Propiedad').split(' '), m = Math.ceil(pal.length / 2);
-    $('sp-h1').innerHTML = `<span><i>${esc(pal.slice(0, m).join(' '))}</i></span>${pal.length > 1 ? `<span><i><em>${esc(pal.slice(m).join(' '))}</em></i></span>` : ''}<span><i>${p.precio ? usd.format(p.precio) : ''}</i></span>`;
-    $('sp-baj').hidden = true;
-    $('sp-btn').href = '#p/' + p.id; $('sp-btxt').textContent = 'Ver detalles';
+    img.classList.add('prop'); const q = $('sp-prop'); q.hidden = false; q.href = '#p/' + p.id;
+    $('sp-ptit').textContent = p.nombre || p.tipo || 'Propiedad';
+    $('sp-plug').textContent = [p.tipo, (p.dir || 'Puyo').split(',').pop().trim()].filter(Boolean).join(' · ');
+    $('sp-ppre').textContent = p.precio ? usd.format(p.precio) : '';
   }
   function marcarSp() { const car = $('sp-car'), w = car.firstElementChild ? car.firstElementChild.offsetWidth + 14 : 1, n = car.children.length || 1, k = Math.min(n - 1, Math.round(car.scrollLeft / w)); $('sp-n1').textContent = String(k + 1).padStart(2, '0'); $('sp-bar').style.width = ((k + 1) / n * 100) + '%'; }
   if ($('sp-car')) {
