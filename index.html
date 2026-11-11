@@ -406,6 +406,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-tabs button::after { content: ''; position: absolute; left: 50%; bottom: -1px; width: 0; height: 2px; background: var(--acento); transition: width .3s, left .3s; }
 .sp-tabs button[aria-pressed="true"]::after { left: 0; width: 100%; }
 .sp-car { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-right: calc(-1 * clamp(26px, 4vw, 48px)); padding-right: 40px; }
+.sp-card.activa { outline: 2px solid var(--acento); outline-offset: -2px; }
+.sp-img { transition: background-image .6s; } .sp-img.cambia > * { animation: entra .6s var(--suavizado) both; } .sp-img.cambia::after { animation: acercar 9s ease-out both; }
 .sp-car::-webkit-scrollbar { display: none; }
 .sp-card { position: relative; flex: 0 0 min(200px, 46%); aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; scroll-snap-align: start; text-decoration: none; background: #1b2347; animation: entra .6s var(--suavizado) both; }
 .sp-card img, .sp-sin { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--suavizado); }
@@ -446,11 +448,11 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 
 <main>
   <section class="split" id="inicio">
-    <div class="sp-img">
-      <span class="ceja">Encuentra más que una casa.</span>
-      <h1><span><i>Encuentra tu</i></span><span><i><em>lugar</em></i></span><span><i>en Puyo.</i></span></h1>
-      <p class="bajada">Propiedades verificadas. Precios claros. Te acompañamos hasta la escritura.</p>
-      <a class="btn btn-acento" href="#propiedades">Ver propiedades<span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
+    <div class="sp-img" id="sp-img">
+      <span class="ceja" id="sp-ceja">Encuentra más que una casa.</span>
+      <h1 id="sp-h1"><span><i>Encuentra tu</i></span><span><i><em>lugar</em></i></span><span><i>en Puyo.</i></span></h1>
+      <p class="bajada" id="sp-baj">Propiedades verificadas. Precios claros. Te acompañamos hasta la escritura.</p>
+      <a class="btn btn-acento" id="sp-btn" href="#propiedades"><b id="sp-btxt" style="font-weight:inherit">Ver propiedades</b><span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
       <div class="sp-cont"><b id="sp-n1">01</b><i><s id="sp-bar"></s></i><b id="sp-n2">01</b></div>
     </div>
     <div class="sp-panel">
@@ -825,12 +827,24 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   function pintarSplit() {
     const car = $('sp-car'); if (!car) return;
     const vs = props.filter((p) => p.estado !== 'Vendida' && (!spClase || (spClase === 'Terreno') === (p.tipo === 'Terreno')));
-    car.replaceChildren(...vs.map((p) => { const a = el('a', 'sp-card'); a.href = '#p/' + p.id; a.innerHTML = `${(p.fotos || [])[0] ? `<img src="${esc(p.fotos[0])}" alt="" loading="lazy">` : '<span class="sp-sin"></span>'}<span class="sp-txt"><b>${esc(p.nombre || p.tipo || 'Propiedad')}</b><small>${ICO.pin}${esc(p.dir || 'Puyo')}</small><em>${p.precio ? usd.format(p.precio) : ''}</em></span>`; return a; }));
+    car.replaceChildren(...vs.map((p) => { const a = el('a', 'sp-card'); a.href = '#p/' + p.id; a.addEventListener('click', (e) => { e.preventDefault(); verSp(p, a); }); a.innerHTML = `${(p.fotos || [])[0] ? `<img src="${esc(p.fotos[0])}" alt="" loading="lazy">` : '<span class="sp-sin"></span>'}<span class="sp-txt"><b>${esc(p.nombre || p.tipo || 'Propiedad')}</b><small>${ICO.pin}${esc(p.dir || 'Puyo')}</small><em>${p.precio ? usd.format(p.precio) : ''}</em></span>`; return a; }));
     if (!vs.length) car.append(el('p', 'sp-vacio', 'Pronto tendremos propiedades aquí.'));
     $('sp-n2').textContent = String(Math.max(vs.length, 1)).padStart(2, '0'); marcarSp();
     const tipos = [...new Set(props.filter((p) => p.estado !== 'Vendida').map((p) => p.tipo).filter(Boolean))];
     $('sp-tipos').replaceChildren(...tipos.map((t) => { const b = el('button', 'sp-tipo'); b.type = 'button'; b.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="${GLIFOS[t] || GLIFOS.Otro}"/></svg><span>${esc(t)}</span>`;
       b.addEventListener('click', () => { filtro.tipo = t; $('f-tipo').value = t; pintarFiltros(); pintar(); $('propiedades').scrollIntoView({ behavior: 'smooth' }); }); return b; }));
+  }
+  function verSp(p, a) {
+    const img = $('sp-img'), f = (p.fotos || [])[0];
+    $('sp-car').querySelectorAll('.sp-card').forEach((x) => x.classList.toggle('activa', x === a));
+    img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia');
+    if (f) img.style.backgroundImage = `url("${f.replace(/"/g, '%22')}")`;
+    $('sp-ceja').textContent = [p.tipo, p.estado === 'Reservada' ? 'Reservada' : 'En venta'].filter(Boolean).join(' · ');
+    const pal = String(p.nombre || p.tipo || 'Propiedad').split(' '), m = Math.ceil(pal.length / 2);
+    $('sp-h1').innerHTML = `<span><i>${esc(pal.slice(0, m).join(' '))}</i></span>${pal.length > 1 ? `<span><i><em>${esc(pal.slice(m).join(' '))}</em></i></span>` : ''}<span><i>${p.precio ? usd.format(p.precio) : ''}</i></span>`;
+    const d = [p.hab ? p.hab + ' hab.' : '', p.banos ? p.banos + ' baño' + (p.banos > 1 ? 's' : '') : '', p.parq ? p.parq + ' parq.' : '', p.area ? Number(p.area).toLocaleString('es-EC') + ' m²' : ''].filter(Boolean).join(' · ');
+    $('sp-baj').textContent = (p.dir || 'Puyo, Pastaza') + (d ? ' — ' + d : '');
+    $('sp-btn').href = '#p/' + p.id; $('sp-btxt').textContent = 'Ver detalles';
   }
   function marcarSp() { const car = $('sp-car'), w = car.firstElementChild ? car.firstElementChild.offsetWidth + 14 : 1, n = car.children.length || 1, k = Math.min(n - 1, Math.round(car.scrollLeft / w)); $('sp-n1').textContent = String(k + 1).padStart(2, '0'); $('sp-bar').style.width = ((k + 1) / n * 100) + '%'; }
   if ($('sp-car')) {
