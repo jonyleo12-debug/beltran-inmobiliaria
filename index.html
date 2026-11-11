@@ -378,6 +378,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .portada::before { content: ''; position: absolute; inset: -30px; background: var(--bg) center/cover no-repeat; filter: blur(28px) brightness(.55); }
 .portada img.principal { position: relative; object-fit: contain; }
 .lf img { object-fit: cover; }
+
+/* Tall photos fill the frame but slowly pan top → bottom so the whole photo is seen */
+@keyframes recorrer { 0%, 8% { object-position: 50% 0%; } 92%, 100% { object-position: 50% 100%; } }
+.portada img.principal.alta { animation: recorrer 12s ease-in-out infinite alternate !important; }
 </style>
 </head>
 <body>
@@ -701,7 +705,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       </div></div></div>`;
     d.hidden = false; document.body.classList.add('bloq');
     const img = d.querySelector('.principal'), minis = [], pts = [], gal = d.querySelector('.gal2');
-    if (img) img.parentNode.style.setProperty('--bg', `url("${img.src}")`); const ord = fotos.map((f, k) => k).slice(1), lfs = [...d.querySelectorAll('.lf')]; let pasos = 0;
+    if (img) img.parentNode.style.setProperty('--bg', `url("${img.src}")`); if (img) img.addEventListener('load', () => { img.classList.toggle('alta', img.naturalHeight > img.naturalWidth * .85); }); const ord = fotos.map((f, k) => k).slice(1), lfs = [...d.querySelectorAll('.lf')]; let pasos = 0;
     const pintarG = () => { const portada = gal.classList.contains('inicio'); img.src = fotos[portada ? 0 : ord[0]]; img.parentNode.style.setProperty('--bg', `url("${img.src}")`); img.classList.remove('cambio'); void img.offsetWidth; img.classList.add('cambio');
       lfs.forEach((b, j) => { const im = b.querySelector('img'), f = fotos[ord[j + 1]]; if (im.getAttribute('src') !== f) { im.src = f; b.classList.remove('entra'); void b.offsetWidth; b.classList.add('entra'); } }); };
 
