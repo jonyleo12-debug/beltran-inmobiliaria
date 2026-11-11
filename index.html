@@ -408,7 +408,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-tabs button[aria-pressed="true"]::after { left: 0; width: 100%; }
 .sp-car { display: flex; gap: 14px; padding-top: 8px; padding-bottom: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-right: calc(-1 * clamp(26px, 4vw, 48px)); padding-right: 40px; }
 .sp-t { flex: 0 0 min(230px, 70%); scroll-snap-align: start; }
-.sp-t .datos { flex-wrap: nowrap; gap: 10px; font-size: 12px; } .sp-t .info { padding: 12px 14px 14px; gap: 6px; } .sp-t h3 { font-size: 14px; margin: 0; } .sp-t .dir { font-size: 11.5px; } .sp-t .precio { display: none; } #sp-ppre { font: 700 clamp(32px, 3.8vw, 52px)/1 var(--cuerpo); text-shadow: 0 4px 24px rgba(0,0,0,.6); } .sp-t .foto { aspect-ratio: 16 / 11; } .sp-t .estado { font-size: 9px; } .sp-t .datos svg { width: 13px; height: 13px; }
+.sp-t .datos { flex-wrap: nowrap; gap: 10px; font-size: 12px; } .sp-t .info { padding: 12px 14px 14px; gap: 6px; } .sp-t h3 { font-size: 14px; margin: 0; } .sp-t .dir { font-size: 11.5px; } .sp-t .precio { display: none; } #sp-ppre { font: 700 clamp(27px, 3.2vw, 44px)/1 var(--cuerpo); text-shadow: 0 4px 24px rgba(0,0,0,.6); } .sp-t .foto { aspect-ratio: 16 / 11; } .sp-t .estado { font-size: 9px; } .sp-t .datos svg { width: 13px; height: 13px; }
 .sp-t.activa { border-color: var(--acento); }
 .sp-img.prop > :not(.sp-prop) { display: none !important; }
 .sp-prop { position: absolute; inset: 0; z-index: 1; text-decoration: none; color: #fff; }
@@ -416,6 +416,9 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-ptit { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); top: clamp(22px, 4vw, 36px); font: 700 clamp(38px, 5.6vw, 84px)/.92 var(--titulos); letter-spacing: -.02em; text-transform: uppercase; animation: entra .8s var(--suavizado) both; }
 .sp-ppie { position: absolute; left: clamp(20px, 4vw, 40px); right: clamp(20px, 4vw, 40px); bottom: 24px; display: flex; justify-content: space-between; align-items: end; gap: 16px; font: 600 13px var(--titulos); letter-spacing: .16em; text-transform: uppercase; color: #e3e6f2; animation: entra .8s .2s var(--suavizado) both; }
 .sp-ppie span:last-child { font: 500 clamp(22px, 2.6vw, 32px) var(--cuerpo); letter-spacing: 0; color: #fff; }
+.sp-pts { position: absolute; left: clamp(20px, 4vw, 40px); bottom: 58px; display: flex; gap: 8px; z-index: 2; animation: entra .8s .3s var(--suavizado) both; }
+.sp-pts button { width: 9px; height: 9px; padding: 0; border: 0; border-radius: 9px; background: rgba(255,255,255,.5); cursor: pointer; transition: width .3s, background .3s; }
+.sp-pts button[aria-current="true"] { width: 26px; background: #fff; }
 .sp-card.activa { outline: 2px solid var(--acento); outline-offset: -2px; }
 .sp-img { transition: background-image .6s; } .sp-img.cambia > * { animation: entra .6s var(--suavizado) both; } .sp-img.cambia::after { animation: zoomPortada 9s ease-out both; }
 .sp-car::-webkit-scrollbar { display: none; }
@@ -463,7 +466,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       <h1 id="sp-h1"><span><i>Encuentra tu</i></span><span><i><em>lugar</em></i></span><span><i>en Puyo.</i></span></h1>
       <p class="bajada" id="sp-baj">Propiedades verificadas. Precios claros. Te acompañamos hasta la escritura.</p>
       <a class="btn btn-acento" id="sp-btn" href="#propiedades"><b id="sp-btxt" style="font-weight:inherit">Ver propiedades</b><span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
-      <a class="sp-prop" id="sp-prop" hidden><span class="sp-ptit" id="sp-ptit"></span><span class="sp-ppie"><span id="sp-plug"></span><span id="sp-ppre"></span></span></a>
+      <a class="sp-prop" id="sp-prop" hidden><span class="sp-ptit" id="sp-ptit"></span><span class="sp-pts" id="sp-pts"></span><span class="sp-ppie"><span id="sp-plug"></span><span id="sp-ppre"></span></span></a>
       <div class="sp-cont"><b id="sp-n1">01</b><i><s id="sp-bar"></s></i><b id="sp-n2">01</b></div>
     </div>
     <div class="sp-panel">
@@ -854,6 +857,9 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     $('sp-ptit').textContent = p.nombre || p.tipo || 'Propiedad';
     $('sp-plug').textContent = [p.tipo, (p.dir || 'Puyo').split(',').pop().trim()].filter(Boolean).join(' · ');
     $('sp-ppre').textContent = p.precio ? usd.format(p.precio) : '';
+    const fs = (p.fotos || []).slice(0, 10), pts = $('sp-pts');
+    pts.replaceChildren(...(fs.length > 1 ? fs.map((u, k) => { const b = el('button'); b.type = 'button'; b.setAttribute('aria-label', 'Foto ' + (k + 1)); b.setAttribute('aria-current', String(k === 0));
+      b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); img.style.backgroundImage = `url("${u.replace(/"/g, '%22')}")`; img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia'); pts.querySelectorAll('button').forEach((x, j) => x.setAttribute('aria-current', String(j === k))); }); return b; }) : []));
   }
   function marcarSp() { const car = $('sp-car'), w = car.firstElementChild ? car.firstElementChild.offsetWidth + 14 : 1, n = car.children.length || 1, k = Math.min(n - 1, Math.round(car.scrollLeft / w)); $('sp-n1').textContent = String(k + 1).padStart(2, '0'); $('sp-bar').style.width = ((k + 1) / n * 100) + '%'; }
   if ($('sp-car')) {
