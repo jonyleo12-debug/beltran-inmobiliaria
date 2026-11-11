@@ -845,8 +845,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     $('sp-ceja').textContent = [p.tipo, p.estado === 'Reservada' ? 'Reservada' : 'En venta'].filter(Boolean).join(' · ');
     const pal = String(p.nombre || p.tipo || 'Propiedad').split(' '), m = Math.ceil(pal.length / 2);
     $('sp-h1').innerHTML = `<span><i>${esc(pal.slice(0, m).join(' '))}</i></span>${pal.length > 1 ? `<span><i><em>${esc(pal.slice(m).join(' '))}</em></i></span>` : ''}<span><i>${p.precio ? usd.format(p.precio) : ''}</i></span>`;
-    const d = [p.hab ? p.hab + ' hab.' : '', p.banos ? p.banos + ' baño' + (p.banos > 1 ? 's' : '') : '', p.parq ? p.parq + ' parq.' : '', p.area ? Number(p.area).toLocaleString('es-EC') + ' m²' : ''].filter(Boolean).join(' · ');
-    $('sp-baj').textContent = (p.dir || 'Puyo, Pastaza') + (d ? ' — ' + d : '');
+    $('sp-baj').hidden = true;
     $('sp-btn').href = '#p/' + p.id; $('sp-btxt').textContent = 'Ver detalles';
   }
   function marcarSp() { const car = $('sp-car'), w = car.firstElementChild ? car.firstElementChild.offsetWidth + 14 : 1, n = car.children.length || 1, k = Math.min(n - 1, Math.round(car.scrollLeft / w)); $('sp-n1').textContent = String(k + 1).padStart(2, '0'); $('sp-bar').style.width = ((k + 1) / n * 100) + '%'; }
