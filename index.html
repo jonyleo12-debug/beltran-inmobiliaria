@@ -763,7 +763,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   let mapaFicha = null, teclaGal = null;
   function abrir(p) {
     const d = $('detalle'), fotos = p.fotos || []; let i = 0;
-    const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}. ${location.href.split('#')[0]}#p/${p.id}`;
+    const msg = `Hola, me interesa "${p.nombre || p.tipo}"${p.precio ? ' (' + usd.format(p.precio) + ')' : ''}.${(p.fotos || [])[0] ? '\n\nFoto: ' + p.fotos[0] : ''}\n\nFicha: ${location.href.split('#')[0]}#p/${p.id}`;
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
       ${fotos.length ? `<div class="gal2 inicio"><div class="portada"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo || '')}"><span class="p-tit">${esc(p.nombre || p.tipo || 'Propiedad')}</span>${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>` : ''}<span class="p-pie"><span>${esc(lugar(p))}</span><span>${p.precio ? usd.format(p.precio) : ''}</span></span></div>${fotos.length > 2 ? `<div class="lado">${fotos.slice(2).map((f, j) => `<button type="button" class="lf" data-pos="${j + 1}" aria-label="Ver foto"><img src="${esc(f)}" alt="" loading="${j < 3 ? 'eager' : 'lazy'}"></button>`).join('')}</div>` : ''}</div>` : ''}
       <div class="cuerpo"><div>
