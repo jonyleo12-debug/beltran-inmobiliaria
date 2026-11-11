@@ -405,7 +405,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-tabs button[aria-pressed="true"] { color: var(--acento); }
 .sp-tabs button::after { content: ''; position: absolute; left: 50%; bottom: -1px; width: 0; height: 2px; background: var(--acento); transition: width .3s, left .3s; }
 .sp-tabs button[aria-pressed="true"]::after { left: 0; width: 100%; }
-.sp-car { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-right: calc(-1 * clamp(26px, 4vw, 48px)); padding-right: 40px; }
+.sp-car { display: flex; gap: 14px; padding-top: 8px; padding-bottom: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-right: calc(-1 * clamp(26px, 4vw, 48px)); padding-right: 40px; }
+.sp-t { flex: 0 0 min(300px, 82%); scroll-snap-align: start; }
+.sp-t .datos { flex-wrap: nowrap; gap: 14px; }
+.sp-t.activa { border-color: var(--acento); }
 .sp-card.activa { outline: 2px solid var(--acento); outline-offset: -2px; }
 .sp-img { transition: background-image .6s; } .sp-img.cambia > * { animation: entra .6s var(--suavizado) both; } .sp-img.cambia::after { animation: acercar 9s ease-out both; }
 .sp-car::-webkit-scrollbar { display: none; }
@@ -827,7 +830,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   function pintarSplit() {
     const car = $('sp-car'); if (!car) return;
     const vs = props.filter((p) => p.estado !== 'Vendida' && (!spClase || (spClase === 'Terreno') === (p.tipo === 'Terreno')));
-    car.replaceChildren(...vs.map((p) => { const a = el('a', 'sp-card'); a.href = '#p/' + p.id; a.addEventListener('click', (e) => { e.preventDefault(); verSp(p, a); }); a.innerHTML = `${(p.fotos || [])[0] ? `<img src="${esc(p.fotos[0])}" alt="" loading="lazy">` : '<span class="sp-sin"></span>'}<span class="sp-txt"><b>${esc(p.nombre || p.tipo || 'Propiedad')}</b><small>${ICO.pin}${esc(p.dir || 'Puyo')}</small><em>${p.precio ? usd.format(p.precio) : ''}</em></span>`; return a; }));
+    car.replaceChildren(...vs.map((p) => { const a = tarjeta(p); a.classList.add('sp-t'); a.addEventListener('click', (e) => { if (e.defaultPrevented) return; e.preventDefault(); verSp(p, a); }); return a; }));
     if (!vs.length) car.append(el('p', 'sp-vacio', 'Pronto tendremos propiedades aquí.'));
     $('sp-n2').textContent = String(Math.max(vs.length, 1)).padStart(2, '0'); marcarSp();
     const tipos = [...new Set(props.filter((p) => p.estado !== 'Vendida').map((p) => p.tipo).filter(Boolean))];
@@ -836,7 +839,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   }
   function verSp(p, a) {
     const img = $('sp-img'), f = (p.fotos || [])[0];
-    $('sp-car').querySelectorAll('.sp-card').forEach((x) => x.classList.toggle('activa', x === a));
+    $('sp-car').querySelectorAll('.sp-t').forEach((x) => x.classList.toggle('activa', x === a));
     img.classList.remove('cambia'); void img.offsetWidth; img.classList.add('cambia');
     if (f) img.style.backgroundImage = `url("${f.replace(/"/g, '%22')}")`;
     $('sp-ceja').textContent = [p.tipo, p.estado === 'Reservada' ? 'Reservada' : 'En venta'].filter(Boolean).join(' · ');
