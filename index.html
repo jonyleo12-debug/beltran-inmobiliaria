@@ -367,6 +367,18 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 @media (min-width: 761px) { .ficha:has(.gal2.inicio) > .cerrar { right: 16px; top: 16px; } }
 @media (max-width: 760px) { .gal2.inicio { grid-template-rows: 1fr; } }
 
+/* Ficha dividida en escritorio: foto a la izquierda, características a la derecha */
+@media (min-width: 1000px) {
+  .detalle { place-items: center; }
+  .ficha:has(> .gal2) { width: min(1500px, 100%); display: grid; grid-template-columns: minmax(0, 1.26fr) minmax(0, 1fr); height: min(880px, calc(100vh - 64px)); }
+  .ficha > .gal2 { grid-column: 1; grid-row: 1; height: 100%; padding: 12px; grid-template-columns: minmax(0, 1fr) 150px; }
+  .ficha > .gal2.inicio { grid-template-columns: 1fr; }
+  .ficha > .gal2 .portada { border-radius: 22px; }
+  .ficha:has(> .gal2) > .cuerpo { grid-column: 2; grid-row: 1; overflow-y: auto; grid-template-columns: 1fr; gap: 26px; padding: 44px 36px 36px; scrollbar-width: thin; scrollbar-color: var(--slate) transparent; }
+  .ficha:has(> .gal2) > .cerrar, .ficha:has(.gal2:not(.sola)) > .cerrar, .ficha:has(.gal2.inicio) > .cerrar { right: 18px; top: 18px; }
+  .ficha:has(> .gal2) .p-tit { font-size: clamp(40px, 5.2vw, 92px); right: 30px; }
+  .ficha:has(> .gal2) #mapa-ficha { height: 240px; }
+}
 /* Slow zoom on the cover photo only */
 @keyframes zoomPortada { from { transform: scale(1); } to { transform: scale(1.08); } }
 .gal2.inicio .portada img { animation: zoomPortada 9s ease-out both; }
