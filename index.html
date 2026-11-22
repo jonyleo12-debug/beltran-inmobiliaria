@@ -620,13 +620,15 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     if ('timestampValue' in v) return v.timestampValue;
     return null;
   };
-  async function cargar() {
+  let ultimaFirma = '', ultimaCarga = 0;
+  async function cargar() { ultimaCarga = Date.now();
     const url = `https://firestore.googleapis.com/v1/projects/${CFG.proyecto}/databases/(default)/documents/publico/${CFG.sitio}/propiedades?pageSize=300`;
     try {
       const r = await fetch(url, { cache: 'no-store' }); const j = await r.json();
+      const firma = JSON.stringify(j.documents || []); if (firma === ultimaFirma) return; const primera = !ultimaFirma; ultimaFirma = firma;
       props = (j.documents || []).map((d) => ({ id: d.name.split('/').pop(), ...Object.fromEntries(Object.entries(d.fields || {}).map(([k, x]) => [k, valor(x)])) }))
         .sort((a, b) => (a.orden == null && b.orden == null ? String(b.creado || '').localeCompare(String(a.creado || '')) : a.orden == null ? -1 : b.orden == null ? 1 : a.orden - b.orden));
-      pintarFiltros(); pintar(); pintarHero(); pintarSplit(); abrirDesdeUrl();
+      pintarFiltros(); pintar(); pintarHero(); pintarSplit(); if (primera || $('detalle').hidden) abrirDesdeUrl();
     } catch (e) { $('conteo').textContent = 'No se pudieron cargar las propiedades. Revisa tu conexión.'; $('grilla').replaceChildren(); }
   }
   const visibles = () => props.filter((p) => (!filtro.fav || favs.has(p.id)) && (!filtro.clase || (filtro.clase === 'Terreno') === (p.tipo === 'Terreno')) && (filtro.estado === 'activas' ? p.estado !== 'Vendida' : filtro.estado === 'Vendida' ? p.estado === 'Vendida' : true)
@@ -818,17 +820,24 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     d.querySelector('.cerrar').onclick = cerrar; teclaGal = fotos.length > 1 ? (e) => { if (e.key === 'ArrowRight') ir(i + 1); if (e.key === 'ArrowLeft') ir(i - 1); } : null;
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
     if (p.lat != null && gEstado === 'si') setTimeout(() => {
-      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 11 }, opcG));
+      let vistos = []; try { vistos = JSON.parse(sessionStorage.getItem('beltran-mapa-visto') || '[]'); } catch (e) {} const animar = !vistos.includes(p.id);
+      if (animar) { vistos.push(p.id); try { sessionStorage.setItem('beltran-mapa-visto', JSON.stringify(vistos)); } catch (e) {} }
+      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: animar ? 11 : 17, isFractionalZoomEnabled: true }, opcG));
       let b = null; if ((p.poligono || []).length > 2) { poligonoG(m, p); b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); }
       pinG(m, p);
       // Zoom-in animation from the city down to the property, one level at a time
-      const meta = 17; let z = 11;
-      google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(function paso() { if (!document.body.contains(m.getDiv())) return; z++; m.setZoom(z); if (z < meta) setTimeout(paso, 380); else if (b) setTimeout(() => m.fitBounds(b, 40), 380); }, 500));
+      if (!animar) { if (b) m.fitBounds(b, 40); }
+      else google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(() => { const t0 = performance.now(), dur = 3200, z0 = 11, z1 = 17;
+        const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const tick = (now) => { if (!document.body.contains(m.getDiv())) return; const t = Math.min(1, (now - t0) / dur); m.moveCamera({ zoom: z0 + (z1 - z0) * ease(t) }); if (t < 1) requestAnimationFrame(tick); else if (b) m.fitBounds(b, 40); };
+        requestAnimationFrame(tick); }, 400));
     }, 50);
     else if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
       mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 11);
-      const mf = mapaFicha; setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyToBounds(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).pad(.6), { duration: 2.6 }); else mf.flyTo([p.lat, p.lng], 17, { duration: 2.6 }); }, 500);
+      let vistosL = []; try { vistosL = JSON.parse(sessionStorage.getItem('beltran-mapa-visto') || '[]'); } catch (e) {} const animarL = !vistosL.includes(p.id); if (animarL) { vistosL.push(p.id); try { sessionStorage.setItem('beltran-mapa-visto', JSON.stringify(vistosL)); } catch (e) {} }
+      const mf = mapaFicha; const fin = () => { if ((p.poligono || []).length > 2) mf.fitBounds(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).pad(.6)); else mf.setView([p.lat, p.lng], 17); };
+      if (!animarL) fin(); else setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyToBounds(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).pad(.6), { duration: 3.4, easeLinearity: .15 }); else mf.flyTo([p.lat, p.lng], 17, { duration: 3.4, easeLinearity: .15 }); }, 500);
       satelite(mapaFicha);
       if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); }
       L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }) }).addTo(mapaFicha);
@@ -897,7 +906,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   }
   cargar();
   // Stay current: reload when the visitor comes back to the tab, and every 2 minutes.
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) cargar(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - ultimaCarga > 120000) cargar(); });
   setInterval(() => { if (!document.hidden && $('detalle').hidden) cargar(); }, 120000);
 })();
 </script>
