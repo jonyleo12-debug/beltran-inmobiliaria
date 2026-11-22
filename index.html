@@ -830,11 +830,11 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       let b = null; if ((p.poligono || []).length > 2) { poligonoG(m, p); b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); }
       pinG(m, p);
       // Zoom-in animation from the city down to the property, one level at a time
-      if (!animar) { if (b) m.setCenter(b.getCenter()); }
+      if (!animar) { google.maps.event.addListenerOnce(m, 'idle', () => { m.setZoom(17); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }); }
       else google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(() => { const t0 = performance.now(), dur = 5000, z0 = 11, z1 = 17; if (b) m.panTo(b.getCenter());
         const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         const tick = (now) => { if (!document.body.contains(m.getDiv())) return; const t = Math.min(1, (now - t0) / dur); m.moveCamera({ zoom: z0 + (z1 - z0) * ease(t) }); if (t < 1) requestAnimationFrame(tick); };
-        requestAnimationFrame(tick); }, 400));
+        requestAnimationFrame(tick); setTimeout(() => { m.setZoom(17); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }, dur + 300); }, 400));
     }, 50);
     else if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
