@@ -516,6 +516,28 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .md-tabs a:hover, .md-tabs a.on { background: #fff; color: #161c35; }
 .md-logo { display: grid; justify-items: end; color: #fff; font: 400 34px/1 var(--display); letter-spacing: .06em; animation: entra .9s .6s var(--suavizado) both; } .md-logo small { font: 600 9px var(--titulos); letter-spacing: .4em; margin-top: 2px; }
 @media (max-width: 700px) { .modus { height: 74vh; margin-top: 76px; } .modus::before { background-position: 58% bottom; } .md-frases { grid-template-columns: 1fr; gap: 6px; } .md-frases p, .md-frases p:nth-child(n) { justify-self: start; font-size: 13px; } .md-frases p:nth-child(n+2) { display: none; } .md-marca { font-size: 25vw; } .md-logo { display: none; } }
+
+/* White ficha */
+.ficha { --texto: #1c2340; --suave: #5d6684; --linea: rgba(28,35,64,.12); --vidrio: rgba(28,35,64,.04); --acento: #4d5c85; background: #fff !important; color: #1c2340; }
+.ficha .cuerpo, .ficha .datos, .ficha .datos b, .ficha h2 { color: #1c2340; }
+.ficha .cuerpo .estado { background: #f1f3f8; color: #1c2340; border-color: rgba(28,35,64,.12); backdrop-filter: none; }
+.ficha .caja-contacto { background: #f6f7fb !important; border-color: rgba(28,35,64,.1) !important; color: #1c2340; }
+.ficha .caja-contacto b { color: #161c35; }
+.ficha .btn-borde { color: #161c35; border-color: rgba(28,35,64,.2); background: #fff; }
+.ficha .cerrar { background: rgba(255,255,255,.9); color: #161c35; border-color: rgba(28,35,64,.15); }
+.ficha .cerrar:hover { background: #fff; }
+
+/* Fit ficha panel without scrolling (desktop) */
+@media (min-width: 1000px) {
+  .ficha:has(> .gal2) .cuerpo { padding-top: 24px; padding-bottom: 24px; gap: 0; }
+  .ficha:has(> .gal2) .cuerpo h4 { margin: 16px 0 8px; }
+  .ficha:has(> .gal2) .cuerpo .datos { padding: 14px 0; margin: 12px 0 0; }
+  .ficha:has(> .gal2) #mapa-ficha { height: clamp(170px, calc(100vh - 480px), 380px) !important; }
+  .ficha:has(> .gal2) .caja-contacto { padding: 16px 18px !important; margin-top: 16px; display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px; align-items: center; }
+  .ficha:has(> .gal2) .caja-contacto b { grid-column: 1 / -1; margin: 0; font-size: 20px; }
+  .ficha:has(> .gal2) .caja-contacto p { display: none; }
+  .ficha:has(> .gal2) .caja-contacto .btn { width: 100%; margin: 0; }
+}
 </style>
 </head>
 <body>
