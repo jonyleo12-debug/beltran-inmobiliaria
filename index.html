@@ -818,15 +818,19 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     d.querySelector('.cerrar').onclick = cerrar; teclaGal = fotos.length > 1 ? (e) => { if (e.key === 'ArrowRight') ir(i + 1); if (e.key === 'ArrowLeft') ir(i - 1); } : null;
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
     if (p.lat != null && gEstado === 'si') setTimeout(() => {
-      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 17 }, opcG));
-      if ((p.poligono || []).length > 2) { poligonoG(m, p); const b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); m.fitBounds(b, 40); }
+      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: 11 }, opcG));
+      let b = null; if ((p.poligono || []).length > 2) { poligonoG(m, p); b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); }
       pinG(m, p);
+      // Zoom-in animation from the city down to the property, one level at a time
+      const meta = 17; let z = 11;
+      google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(function paso() { if (!document.body.contains(m.getDiv())) return; z++; m.setZoom(z); if (z < meta) setTimeout(paso, 380); else if (b) setTimeout(() => m.fitBounds(b, 40), 380); }, 500));
     }, 50);
     else if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
-      mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 17);
+      mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 11);
+      const mf = mapaFicha; setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyToBounds(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).pad(.6), { duration: 2.6 }); else mf.flyTo([p.lat, p.lng], 17, { duration: 2.6 }); }, 500);
       satelite(mapaFicha);
-      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); mapaFicha.fitBounds(pg.getBounds().pad(.6)); }
+      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); }
       L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }) }).addTo(mapaFicha);
     }, 50);
     document.title = (p.nombre || p.tipo || 'Propiedad') + ' · Beltrán Inmobiliaria';
