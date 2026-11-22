@@ -426,9 +426,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-img h1 span:nth-child(2) i { animation-delay: .12s; } .sp-img h1 span:nth-child(3) i { animation-delay: .24s; }
 .sp-img .bajada { margin: 20px 0 30px; color: #d3d8ea; max-width: 380px; }
 .sp-img .btn { align-self: flex-start; }
-.sp-cont { position: absolute; left: clamp(28px, 5vw, 64px); bottom: 30px; display: flex; align-items: center; gap: 14px; color: #fff; font: 600 13px var(--titulos); }
+.sp-cont { display: none !important; } .sp-cont { position: absolute; left: clamp(28px, 5vw, 64px); bottom: 30px; display: flex; align-items: center; gap: 14px; color: #fff; font: 600 13px var(--titulos); }
 .sp-cont i { width: 90px; height: 2px; background: rgba(255,255,255,.25); border-radius: 2px; overflow: hidden; } .sp-cont s { display: block; height: 100%; width: 0; background: var(--acento); transition: width .4s; }
 .sp-panel { background: linear-gradient(180deg, #4c6089, #41547b); padding: clamp(26px, 4vw, 48px); display: flex; flex-direction: column; min-width: 0; }
+.sp-panel { justify-content: center; gap: 18px; } .sp-panel > p { margin: 0; color: var(--suave); } .sp-panel .valores { grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; } .sp-panel .valor { padding: 18px; } .sp-panel .valor h3 { font-size: 15px; } .sp-panel .valor p { font-size: 13px; }
 .sp-panel h2 { margin: 0; font: 500 clamp(34px, 3.4vw, 46px)/1 var(--display); color: #fff; }
 .sp-tabs { display: flex; gap: 26px; margin: 22px 0 24px; border-bottom: 1px solid var(--linea); }
 .sp-tabs button { position: relative; border: 0; background: none; padding: 0 0 12px; color: var(--suave); font: 500 15px var(--cuerpo); }
@@ -465,7 +466,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-fl { display: flex; gap: 10px; margin: 16px 0 26px; }
 .sp-fl button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--linea); background: var(--vidrio); color: #fff; font-size: 20px; transition: background .2s, color .2s; }
 .sp-fl button:hover { background: var(--acento); color: #4a5d85; }
-.sp-panel h3 { margin: auto 0 14px; font: 600 16px var(--cuerpo); color: #fff; }
+.sp-panel > h3 { margin: auto 0 14px; font: 600 16px var(--cuerpo); color: #fff; }
 .sp-tipos { display: flex; gap: 10px; flex-wrap: wrap; }
 .sp-tipo { display: grid; justify-items: center; gap: 6px; width: 84px; padding: 12px 6px 10px; border-radius: 14px; border: 1px solid var(--linea); background: var(--vidrio); color: var(--acento); transition: transform .25s, border-color .25s, background .25s; }
 .sp-tipo:hover { transform: translateY(-3px); border-color: var(--acento); background: rgba(180,193,238,.1); }
@@ -502,13 +503,16 @@ h1, h2, h3, .titulo, .sec-tit { font-weight: 300 !important; letter-spacing: -.0
       <a class="sp-prop" id="sp-prop" hidden><span class="sp-ptit" id="sp-ptit"></span><span class="sp-pts" id="sp-pts"></span><span class="sp-ppie"><span id="sp-plug"></span><span id="sp-ppre"></span></span></a>
       <div class="sp-cont"><b id="sp-n1">01</b><i><s id="sp-bar"></s></i><b id="sp-n2">01</b></div>
     </div>
-    <div class="sp-panel">
-      <h2>Descubre</h2>
-      <div class="sp-tabs" id="sp-tabs"><button type="button" data-c="" aria-pressed="true">Todas</button><button type="button" data-c="Vivienda" aria-pressed="false">Viviendas</button><button type="button" data-c="Terreno" aria-pressed="false">Terrenos</button></div>
-      <div class="sp-car" id="sp-car"></div>
-      <div class="sp-fl"><button type="button" id="sp-ant" aria-label="Anterior">‹</button><button type="button" id="sp-sig" aria-label="Siguiente">›</button></div>
-      <h3>¿Qué buscas?</h3>
-      <div class="sp-tipos" id="sp-tipos"></div>
+    <div class="sp-panel" id="nosotros">
+      <span class="ceja">Beltrán Inmobiliaria</span>
+      <h2 class="tit">Te acompañamos<br><em>hasta la escritura.</em></h2>
+      <p>Desde la primera visita hasta la firma en la notaría. Cada propiedad que publicamos tiene sus papeles revisados y su ubicación verificada, para que compres con tranquilidad.</p>
+      <div class="valores">
+        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="m8.5 12 2.4 2.4 4.6-4.8"/></svg><h3>Documentos en regla</h3><p>Revisamos escrituras, gravámenes y certificados antes de vender.</p></div>
+        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><h3>Ubicación exacta</h3><p>Cada terreno está dibujado en el mapa con sus linderos.</p></div>
+        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="m11 11 9 9m-3-3 2.2-2.2M14.5 14.5l1.8-1.8"/></svg><h3>Proceso sin enredos</h3><p>Te guiamos en cada trámite, de la búsqueda a la firma.</p></div>
+        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M4 5h16v11H8l-4 4z"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 9.5h8M8 12.5h5"/></svg><h3>Atención directa</h3><p>Respondemos por WhatsApp y agendamos tu visita el mismo día.</p></div>
+      
     </div>
   </section>
   <div class="hero" hidden>
@@ -549,21 +553,6 @@ h1, h2, h3, .titulo, .sec-tit { font-weight: 300 !important; letter-spacing: -.0
     <div class="envoltura">
       <div class="sec-cab"><div><span class="ceja">Ubicación exacta</span><h2 class="tit">Cada propiedad,<br><em>en el mapa.</em></h2><p>Toca una casita para ver la propiedad.</p></div></div>
       <div id="mapa" aria-label="Mapa de propiedades"></div>
-    </div>
-  </section>
-
-  <section id="nosotros" style="padding-top:0">
-    <div class="envoltura">
-      <div class="nosotros">
-        <div><span class="ceja">Beltrán Inmobiliaria</span><h2 class="tit">Te acompañamos<br><em>hasta la escritura.</em></h2></div>
-        <div><p>Desde la primera visita hasta la firma en la notaría. Cada propiedad que publicamos tiene sus papeles revisados y su ubicación verificada, para que compres con tranquilidad.</p></div>
-      </div>
-      <div class="valores">
-        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="m8.5 12 2.4 2.4 4.6-4.8"/></svg><h3>Documentos en regla</h3><p>Revisamos escrituras, gravámenes y certificados antes de vender.</p></div>
-        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><h3>Ubicación exacta</h3><p>Cada terreno está dibujado en el mapa con sus linderos.</p></div>
-        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="m11 11 9 9m-3-3 2.2-2.2M14.5 14.5l1.8-1.8"/></svg><h3>Proceso sin enredos</h3><p>Te guiamos en cada trámite, de la búsqueda a la firma.</p></div>
-        <div class="valor"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" d="M4 5h16v11H8l-4 4z"/><path fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 9.5h8M8 12.5h5"/></svg><h3>Atención directa</h3><p>Respondemos por WhatsApp y agendamos tu visita el mismo día.</p></div>
-      </div>
     </div>
   </section>
 
