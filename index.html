@@ -377,7 +377,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .ficha:has(> .gal2) > .cuerpo { grid-column: 2; grid-row: 1; overflow-y: auto; grid-template-columns: 1fr; gap: 26px; padding: 44px 36px 36px; scrollbar-width: thin; scrollbar-color: var(--slate) transparent; }
   .ficha:has(> .gal2) > .cerrar, .ficha:has(.gal2:not(.sola)) > .cerrar, .ficha:has(.gal2.inicio) > .cerrar { right: 18px; top: 18px; }
   .ficha:has(> .gal2) .p-tit { font-size: clamp(40px, 5.2vw, 92px); right: 30px; }
-  .ficha:has(> .gal2) #mapa-ficha { height: 240px; }
+  .ficha:has(> .gal2) #mapa-ficha { height: 280px; }
+  .ficha:has(> .gal2) .cuerpo { align-content: start; }
 }
 /* Slow zoom on the cover photo only */
 @keyframes zoomPortada { from { transform: scale(1); } to { transform: scale(1.08); } }
@@ -787,11 +788,11 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
         ${p.desc ? `<h4>Descripción</h4><div class="desc">${esc(p.desc)}</div>` : ''}
         ${(p.ambientes || []).length ? `<h4>Distribución</h4><div class="plano"><div class="plano-total">Área total <b>${(p.area || p.ambientes.reduce((t, a) => t + (a.m2 || 0), 0)).toLocaleString('es-EC')} m²</b></div>${p.ambientes.map((a) => `<div><span>${esc(a.nombre)}</span><b>${a.m2 ? a.m2.toLocaleString('es-EC') + ' m²' : ''}</b></div>`).join('')}</div>` : ''}
         ${(p.servicios || []).length ? `<h4>Servicios</h4><div class="servs">${p.servicios.map((s) => `<span>${esc(SERV[s] || s)}</span>`).join('')}</div>` : ''}
+        ${p.lat != null ? '<h4>Ubicación</h4><div id="mapa-ficha"></div>' : ''}
       </div><div class="lateral">
         <div class="caja-contacto"><b>¿Te interesa?</b><p>Escríbenos y agendamos una visita.</p>
           <a class="btn btn-wa" href="${waUrl(msg)}" ${CFG.whatsapp ? 'target="_blank" rel="noopener"' : ''}><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2zm-3.3 5.7c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.4-.3-2-1c-.3-.1-.5-.1-.7.2l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5h-.5z"/></svg>Preguntar por WhatsApp</a>
           <button class="btn btn-borde" type="button" id="compartir">Compartir</button></div>
-        ${p.lat != null ? '<div id="mapa-ficha"></div>' : ''}
       </div></div></div>`;
     d.hidden = false; document.body.classList.add('bloq');
     const img = d.querySelector('.principal'), minis = [], pts = [], gal = d.querySelector('.gal2');
