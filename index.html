@@ -473,6 +473,31 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-tipo svg { width: 26px; height: 26px; } .sp-tipo span { font-size: 11px; color: var(--suave); text-align: center; line-height: 1.2; }
 @media (max-width: 900px) { .split { grid-template-columns: 1fr; margin-top: 88px; width: calc(100% - 24px); border-radius: 26px; } .sp-img { min-height: 520px; justify-content: flex-end; padding-bottom: 80px; } }
 .valor h3 { font-family: var(--titulos) !important; font-weight: 600 !important; letter-spacing: .12em; text-transform: uppercase; font-size: 13px !important; }
+
+/* Light sections (white backgrounds, Altavista-style) */
+.claro { --texto: #1c2340; --suave: #5d6684; --linea: rgba(28,35,64,.12); --vidrio: rgba(28,35,64,.04); --acento: #4d5c85; background: #f6f7fb; color: var(--texto); position: relative; }
+#propiedades.claro { margin-top: 96px; border-radius: 48px 48px 0 0; }
+.claro .tit { color: #161c35; } .claro .tit em { color: #4d5c85; font-style: normal; }
+.claro .ceja { color: #4d5c85; }
+.claro .chip:hover { color: #161c35; border-color: rgba(28,35,64,.3); } .claro .chip[aria-pressed="true"] { background: #252e4c; color: #fff; border-color: #252e4c; }
+.claro .orden { color: #161c35; background: #fff; }
+.claro .tarjeta { background: #fff; border-color: rgba(28,35,64,.08); box-shadow: 0 20px 40px -28px rgba(22,28,53,.35); }
+.claro .tarjeta:hover { box-shadow: 0 40px 70px -34px rgba(22,28,53,.55); border-color: rgba(77,92,133,.35); }
+.claro .tarjeta h3, .claro .tarjeta .precio { color: #161c35; }
+.claro .tarjeta::after { background: radial-gradient(340px circle at var(--mx) var(--my), rgba(77,92,133,.08), transparent 60%); }
+.claro .cargando { background: #e8ebf3; }
+.claro .datos, .claro .datos b { color: #1c2340; }
+#mapa-sec.claro { padding-bottom: 110px; }
+.claro #mapa { box-shadow: 0 30px 60px -36px rgba(22,28,53,.5); }
+/* Extra motion */
+.sec-cab.rev .tit { clip-path: inset(0 0 100% 0); transform: translateY(40px); transition: clip-path 1.1s var(--suavizado) .1s, transform 1.1s var(--suavizado) .1s; }
+.sec-cab.rev.vis .tit { clip-path: inset(0 0 -10% 0); transform: none; }
+.tarjeta.rev .foto { clip-path: inset(0 0 100% 0); transition: clip-path 1.1s var(--suavizado); }
+.tarjeta.rev.vis .foto { clip-path: inset(0); }
+.tarjeta.rev .foto > img { transform: scale(1.25); } .tarjeta.rev.vis .foto > img { transform: scale(1); transition: transform 1.6s var(--suavizado); }
+.tarjeta.rev.vis:hover .foto > img { transform: scale(1.07); transition: transform .9s var(--suavizado); }
+@media (prefers-reduced-motion: reduce) { .rev, .rev * { transition: none !important; clip-path: none !important; transform: none !important; opacity: 1 !important; } }
+@media (max-width: 560px) { #propiedades.claro { border-radius: 28px 28px 0 0; margin-top: 56px; } }
 </style>
 </head>
 <body>
@@ -537,7 +562,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     </div>
   </div>
 
-  <section id="propiedades">
+  <section id="propiedades" class="claro">
     <div class="envoltura">
       <div class="sec-cab">
         <div><span class="ceja">Propiedades en venta</span><h2 class="tit">Hogares reales.<br><em>Precios claros.</em></h2><p id="conteo">Cargando propiedades…</p></div>
@@ -547,14 +572,14 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     </div>
   </section>
 
-  <section id="mapa-sec" style="padding-top:0">
+  <section id="mapa-sec" class="claro" style="padding-top:0">
     <div class="envoltura">
       <div class="sec-cab"><div><span class="ceja">Ubicación exacta</span><h2 class="tit">Cada propiedad,<br><em>en el mapa.</em></h2><p>Toca una casita para ver la propiedad.</p></div></div>
       <div id="mapa" aria-label="Mapa de propiedades"></div>
     </div>
   </section>
 
-  <section id="contacto" style="padding-top:0">
+  <section id="contacto">
     <div class="envoltura">
       <div class="contacto">
         <div><span class="ceja">Hablemos</span><h2 class="tit">¿Quieres vender o<br><em>comprar una propiedad?</em></h2><p>Escríbenos y te ayudamos. También publicamos tu casa o terreno.</p></div>
