@@ -372,6 +372,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .gal2 .p-pie { bottom: clamp(20px, 3vw, 34px); align-items: end; }
 .ficha:has(> .gal2) .cuerpo .dir, .ficha:has(> .gal2) .cuerpo .precio-g { display: none; }
 .ficha:has(> .gal2) .cuerpo h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); margin: 0; }
+.ficha:has(> .gal2) .cuerpo .estado { margin-bottom: 4px; }
+.ficha:has(> .gal2) .cuerpo .datos { margin-top: 18px; padding: 22px 0; gap: 36px; font-size: 18px; }
+.ficha:has(> .gal2) .cuerpo .datos b, .ficha:has(> .gal2) .cuerpo .datos strong { font-size: 24px; }
+.ficha:has(> .gal2) .cuerpo h4 { margin-top: 30px; }
 /* Ficha dividida en escritorio: foto a la izquierda, características a la derecha */
 @media (min-width: 1000px) {
   .detalle { place-items: center; }
@@ -390,7 +394,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .ficha:has(> .gal2) > .cuerpo { grid-column: 2; grid-row: 1; overflow-y: auto; grid-template-columns: 1fr; gap: 26px; padding: 44px 36px 36px; scrollbar-width: thin; scrollbar-color: var(--slate) transparent; }
   .ficha:has(> .gal2) > .cerrar, .ficha:has(.gal2:not(.sola)) > .cerrar, .ficha:has(.gal2.inicio) > .cerrar { right: 18px; top: 18px; }
   .ficha:has(> .gal2) .p-tit { font-size: clamp(40px, 5.2vw, 92px); right: 30px; }
-  .ficha:has(> .gal2) #mapa-ficha { height: 280px; }
+  .ficha:has(> .gal2) #mapa-ficha { height: 320px; }
   .ficha:has(> .gal2) .cuerpo { align-content: start; }
 }
 /* Slow zoom on the cover photo only */
