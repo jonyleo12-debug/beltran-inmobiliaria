@@ -501,7 +501,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 
 /* MODUS-style hero */
 .modus { position: relative; width: 100%; margin: 0; margin-top: 88px; padding: 0; height: max(540px, 39vw); min-height: 0; border-radius: 0; overflow: hidden; isolation: isolate; color: #161c35; animation: entra .9s var(--suavizado) both; }
-.modus::before { content: ''; position: absolute; inset: 0; z-index: -2; background: url(assets/portada-modus.jpg) center bottom/cover no-repeat; animation: acercar 14s ease-out both; }
+.modus::before { content: ''; position: absolute; inset: 0; z-index: -2; background: url(assets/portada-casa.jpg) center bottom/cover no-repeat; animation: acercar 14s ease-out both; }
 .modus::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(246,247,251,.96) 0%, rgba(246,247,251,.82) 26%, rgba(246,247,251,.15) 52%, transparent 62%, rgba(11,16,36,.55) 100%); }
 .md-frases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: clamp(26px, 4vw, 44px) clamp(24px, 5vw, 64px) 0; }
 .md-frases p { margin: 0; font: 500 14px/1.35 var(--cuerpo); color: #252e4c; animation: entra .9s var(--suavizado) both; }
@@ -542,43 +542,6 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       <p>Te acompañamos<br>hasta la escritura.</p>
     </div>
     <h1 class="md-marca" aria-label="Beltrán"><span>B</span><span>E</span><span>L</span><span>T</span><span>R</span><span>Á</span><span>N</span></h1>
-    <div class="md-pie">
-      <div class="md-tabs"><a href="#propiedades" data-t="Casa">Casas</a><a href="#propiedades" data-t="Terreno">Terrenos</a><a href="#propiedades" class="on" data-t="">Ver todas</a></div>
-      <span class="md-logo">BELTRÁN<small>INMOBILIARIA</small></span>
-    </div>
-  </section>
-  <div class="hero" hidden>
-    <div class="hero-fondo" id="hero-fondo"><img alt="" id="hf-a"><img alt="" id="hf-b"></div>
-    <div class="envoltura">
-      <div class="hero-cuerpo">
-        <div>
-          <span class="ceja">Encuentra más que una casa.</span>
-          <h1><span><i>Encuentra tu</i></span><span><i><em>lugar</em></i></span><span><i>en Puyo.</i></span></h1>
-          <p class="bajada">Propiedades verificadas. Precios claros. Te acompañamos hasta la escritura.</p>
-          <div class="hero-acc">
-            <a class="btn btn-acento" href="#propiedades">Ver propiedades<span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
-            <a class="btn btn-borde" href="#mapa-sec"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Ver en el mapa</a>
-          </div>
-        </div>
-        <a class="destacada" id="destacada" href="#propiedades" hidden></a>
-      </div>
-      <form class="buscador" id="buscador" hidden>
-        <label>Tipo<select id="f-tipo"><option value="">Todos los tipos</option></select></label>
-        <label>Precio hasta<select id="f-precio"><option value="">Cualquier precio</option><option value="30000">$30.000</option><option value="60000">$60.000</option><option value="100000">$100.000</option><option value="150000">$150.000</option><option value="250000">$250.000</option><option value="500000">$500.000</option></select></label>
-        <label>Habitaciones<select id="f-hab"><option value="">Todas</option><option value="1">1 o más</option><option value="2">2 o más</option><option value="3">3 o más</option><option value="4">4 o más</option></select></label>
-        <button class="btn btn-acento" type="submit">Buscar propiedades<span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="m16 16 4 4"/></svg></span></button>
-      </form>
-    </div>
-  </div>
-
-  <section id="propiedades" class="claro">
-    <div class="envoltura">
-      <div class="sec-cab">
-        <div><span class="ceja">Propiedades en venta</span><h2 class="tit">Hogares reales.<br><em>Precios claros.</em></h2><p id="conteo">Cargando propiedades…</p></div>
-        <div class="filtros"><div class="chips" id="chips"></div><select class="orden" id="orden" aria-label="Ordenar"><option value="">Recomendadas</option><option value="menor">Precio: menor a mayor</option><option value="mayor">Precio: mayor a menor</option><option value="nuevas">Más nuevas</option></select></div>
-      </div>
-      <div class="grilla" id="grilla"><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div></div>
-    </div>
   </section>
 
   <section id="mapa-sec" class="claro" style="padding-top:0">
