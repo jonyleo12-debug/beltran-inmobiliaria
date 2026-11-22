@@ -826,22 +826,22 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     $('compartir').onclick = async () => { const u = location.href; try { if (navigator.share) await navigator.share({ title: p.nombre || 'Propiedad', url: u }); else { await navigator.clipboard.writeText(u); $('compartir').textContent = 'Enlace copiado ✓'; } } catch (e) {} };
     if (p.lat != null && gEstado === 'si') setTimeout(() => {
       const vistos = (window.__mapaVisto = window.__mapaVisto || []); const animar = !vistos.includes(p.id); if (animar) vistos.push(p.id);
-      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: animar ? 11 : 17, isFractionalZoomEnabled: true }, opcG));
+      const m = new google.maps.Map($('mapa-ficha'), Object.assign({ center: { lat: p.lat, lng: p.lng }, zoom: animar ? 11 : 17.5, isFractionalZoomEnabled: true }, opcG));
       let b = null; if ((p.poligono || []).length > 2) { poligonoG(m, p); b = new google.maps.LatLngBounds(); p.poligono.forEach((q) => b.extend(q)); }
       pinG(m, p);
       // Zoom-in animation from the city down to the property, one level at a time
-      if (!animar) { google.maps.event.addListenerOnce(m, 'idle', () => { m.setZoom(17); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }); }
-      else google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(() => { const t0 = performance.now(), dur = 5000, z0 = 11, z1 = 17; if (b) m.panTo(b.getCenter());
+      if (!animar) { google.maps.event.addListenerOnce(m, 'idle', () => { m.setZoom(17.5); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }); }
+      else google.maps.event.addListenerOnce(m, 'idle', () => setTimeout(() => { const t0 = performance.now(), dur = 5000, z0 = 11, z1 = 17.5; if (b) m.panTo(b.getCenter());
         const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         const tick = (now) => { if (!document.body.contains(m.getDiv())) return; const t = Math.min(1, (now - t0) / dur); m.moveCamera({ zoom: z0 + (z1 - z0) * ease(t) }); if (t < 1) requestAnimationFrame(tick); };
-        requestAnimationFrame(tick); setTimeout(() => { m.setZoom(17); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }, dur + 300); }, 400));
+        requestAnimationFrame(tick); setTimeout(() => { m.setZoom(17.5); m.setCenter(b ? b.getCenter() : { lat: p.lat, lng: p.lng }); }, dur + 300); }, 400));
     }, 50);
     else if (p.lat != null && window.L) setTimeout(() => {
       if (mapaFicha) { mapaFicha.remove(); mapaFicha = null; }
-      mapaFicha = L.map('mapa-ficha', { scrollWheelZoom: false }).setView([p.lat, p.lng], 11);
+      mapaFicha = L.map("mapa-ficha", { scrollWheelZoom: false, zoomSnap: .5 }).setView([p.lat, p.lng], 11);
       const vistosL = (window.__mapaVisto = window.__mapaVisto || []); const animarL = !vistosL.includes(p.id); if (animarL) vistosL.push(p.id);
-      const mf = mapaFicha; const fin = () => { if ((p.poligono || []).length > 2) mf.setView(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17); else mf.setView([p.lat, p.lng], 17); };
-      if (!animarL) fin(); else setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyTo(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17, { duration: 5, easeLinearity: .15 }); else mf.flyTo([p.lat, p.lng], 17, { duration: 5, easeLinearity: .15 }); }, 500);
+      const mf = mapaFicha; const fin = () => { if ((p.poligono || []).length > 2) mf.setView(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17.5); else mf.setView([p.lat, p.lng], 17.5); };
+      if (!animarL) fin(); else setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyTo(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17.5, { duration: 5, easeLinearity: .15 }); else mf.flyTo([p.lat, p.lng], 17.5, { duration: 5, easeLinearity: .15 }); }, 500);
       satelite(mapaFicha);
       if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); }
       L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }) }).addTo(mapaFicha);
