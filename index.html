@@ -540,7 +540,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 }
 
 /* Header fades from transparent to solid as you scroll */
-.cab, .cab.solida { background: rgba(11, 16, 36, calc(.82 * var(--op, 0))); backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(150%); -webkit-backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(150%); border-bottom-color: rgba(255,255,255, calc(.1 * var(--op, 0))); transition: height .35s; }
+.cab, .cab.solida { background: rgba(11, 16, 36, calc(.82 * var(--op, 0))); backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(calc(1 + .5 * var(--op, 0))); -webkit-backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(calc(1 + .5 * var(--op, 0))); border-bottom-color: rgba(255,255,255, calc(.1 * var(--op, 0))); transition: height .35s; }
 </style>
 </head>
 <body>
