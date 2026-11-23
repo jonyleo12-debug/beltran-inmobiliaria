@@ -500,7 +500,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 @media (max-width: 560px) { #propiedades.claro { border-radius: 0; margin-top: 0; } }
 
 /* MODUS-style hero */
-.modus { position: relative; width: 100%; margin: 0; margin-top: 88px; padding: 0; height: calc(100vh - 88px); min-height: 560px; border-radius: 0; overflow: hidden; isolation: isolate; color: #161c35; animation: entra .9s var(--suavizado) both; }
+.modus { position: relative; width: 100%; margin: 0; margin-top: 0; padding: 88px 0 0; height: 100vh; min-height: 620px; border-radius: 0; overflow: hidden; isolation: isolate; color: #161c35; animation: entra .9s var(--suavizado) both; }
 .modus::before { content: ''; position: absolute; inset: 0; z-index: -2; background: url(assets/portada-montana.jpg) center 78%/cover no-repeat; animation: acercar 14s ease-out both; }
 .modus::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11,16,36,.55) 0%, rgba(11,16,36,.25) 40%, transparent 60%, rgba(11,16,36,.5) 100%); }
 .md-frases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: clamp(26px, 4vw, 44px) clamp(24px, 5vw, 64px) 0; }
@@ -515,7 +515,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .md-tabs a { padding: 8px 18px; border-radius: 999px; font: 500 14px var(--cuerpo); color: #fff; text-decoration: none; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background .25s, color .25s; }
 .md-tabs a:hover, .md-tabs a.on { background: #fff; color: #161c35; }
 .md-logo { display: grid; justify-items: end; color: #fff; font: 400 34px/1 var(--display); letter-spacing: .06em; animation: entra .9s .6s var(--suavizado) both; } .md-logo small { font: 600 9px var(--titulos); letter-spacing: .4em; margin-top: 2px; }
-@media (max-width: 700px) { .modus { height: 74vh; margin-top: 76px; } .modus::before { background-position: 40% 30%; } .md-frases { grid-template-columns: 1fr; gap: 6px; } .md-frases p, .md-frases p:nth-child(n) { justify-self: start; font-size: 13px; } .md-frases p:nth-child(n+2) { display: none; } .md-marca { font-size: 25vw; } .md-logo { display: none; } }
+@media (max-width: 700px) { .modus { height: 82vh; margin-top: 0; padding-top: 76px; } .modus::before { background-position: 40% 30%; } .md-frases { grid-template-columns: 1fr; gap: 6px; } .md-frases p, .md-frases p:nth-child(n) { justify-self: start; font-size: 13px; } .md-frases p:nth-child(n+2) { display: none; } .md-marca { font-size: 25vw; } .md-logo { display: none; } }
 
 /* White ficha */
 .ficha { --texto: #1c2340; --suave: #5d6684; --linea: rgba(28,35,64,.12); --vidrio: rgba(28,35,64,.04); --acento: #4d5c85; background: #fff !important; color: #1c2340; }
@@ -538,6 +538,9 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .ficha:has(> .gal2) .caja-contacto p { display: none; }
   .ficha:has(> .gal2) .caja-contacto .btn { width: 100%; margin: 0; }
 }
+
+/* Header fades from transparent to solid as you scroll */
+.cab, .cab.solida { background: rgba(11, 16, 36, calc(.82 * var(--op, 0))); backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(150%); -webkit-backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(150%); border-bottom-color: rgba(255,255,255, calc(.1 * var(--op, 0))); transition: height .35s; }
 </style>
 </head>
 <body>
@@ -910,7 +913,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   const secs = enlaces.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   let tic = false;
   const alScroll = () => { tic = false; const y = scrollY, alto = document.documentElement.scrollHeight - innerHeight;
-    cab.classList.toggle('solida', y > 30); prog.style.transform = `scaleX(${alto > 0 ? Math.min(1, y / alto) : 0})`; arriba.classList.toggle('ver', y > innerHeight * .9);
+    cab.classList.toggle('solida', y > 30); cab.style.setProperty('--op', Math.min(1, y / 320).toFixed(3)); prog.style.transform = `scaleX(${alto > 0 ? Math.min(1, y / alto) : 0})`; arriba.classList.toggle('ver', y > innerHeight * .9);
     if (y < innerHeight) fondoHero.style.transform = `translateY(${y * .22}px)`;
     let act = -1; secs.forEach((s, k) => { if (s.getBoundingClientRect().top < innerHeight * .4) act = k; }); enlaces.forEach((a, k) => a.classList.toggle('activo', k === act)); };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(alScroll); } }, { passive: true }); alScroll();
