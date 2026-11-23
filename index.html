@@ -701,7 +701,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     area: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="M4 10h6V4"/></svg>',
     pin: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   };
-  let props = [], filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas', clase: '', fav: false }, mapa = null, capa = null;
+  let props = [], filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas', clase: 'Vivienda', fav: false }, mapa = null, capa = null;
   $('anio').textContent = new Date().getFullYear();
 
   // WhatsApp and e-mail links come from config.js
@@ -782,7 +782,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   function revelar(n, k) { if (!obs) return; n.classList.add('rev'); if (k != null) n.style.transitionDelay = (k % 4) * 80 + 'ms'; obs.observe(n); }
   function vacio() {
     const v = el('div', 'vacio', props.length ? 'No hay propiedades con esos filtros.' : 'Estamos preparando nuestras primeras propiedades. Escríbenos por WhatsApp y te avisamos.');
-    if (props.length) { const b = el('button', 'btn btn-borde', 'Quitar filtros'); b.type = 'button'; b.addEventListener('click', () => { filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas', clase: '', fav: false }; ['f-tipo', 'f-precio', 'f-hab'].forEach((id) => { $(id).value = ''; }); pintarFiltros(); pintar(); }); v.append(b); }
+    if (props.length) { const b = el('button', 'btn btn-borde', 'Quitar filtros'); b.type = 'button'; b.addEventListener('click', () => { filtro = { tipo: '', precio: 0, hab: 0, estado: 'activas', clase: 'Vivienda', fav: false }; ['f-tipo', 'f-precio', 'f-hab'].forEach((id) => { $(id).value = ''; }); pintarFiltros(); pintar(); }); v.append(b); }
     return v;
   }
   // Hero: the first published listings with photos rotate as background + glass card
