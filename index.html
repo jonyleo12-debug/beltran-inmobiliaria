@@ -566,6 +566,18 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio { max-height: 60px; opacity: 1; padding-top: 14px; }
   .grilla .tarjeta:hover, .grilla .tarjeta.rev.vis:hover { transform: none; }
 }
+
+/* Quiénes somos */
+.qs { display: grid; grid-template-columns: 1fr 1fr; padding: 0; background: #f6f7fb; color: #1c2340; min-height: 620px; }
+.qs-txt { padding: clamp(48px, 8vw, 120px) clamp(24px, 7vw, 110px); align-self: center; }
+.qs-ceja { display: block; font: 400 clamp(18px, 1.8vw, 24px) var(--titulos); letter-spacing: .12em; text-transform: uppercase; color: #1c2340; }
+.qs h2 { margin: 6px 0 0; font: 400 clamp(56px, 6vw, 92px)/.95 var(--display); color: #161c35; }
+.qs-raya { display: block; width: 86px; height: 4px; background: #4d5c85; margin: 30px 0 36px; }
+.qs p { margin: 0 0 18px; font-size: 16px; line-height: 1.9; color: #2b3352; max-width: 560px; text-align: justify; }
+.qs-btn { display: inline-block; margin-top: 28px; padding: 16px 44px; border: 2px solid #4d5c85; color: #4d5c85; font: 600 15px var(--titulos); letter-spacing: .3em; text-transform: uppercase; text-decoration: none; transition: background .3s, color .3s; }
+.qs-btn:hover { background: #4d5c85; color: #fff; }
+.qs-img { background: url(assets/portada.jpg) center/cover no-repeat; min-height: 420px; }
+@media (max-width: 860px) { .qs { grid-template-columns: 1fr; } .qs-img { order: -1; min-height: 300px; } .qs p { text-align: left; } }
 </style>
 </head>
 <body>
@@ -587,7 +599,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 <main>
   <section class="modus" id="inicio">
     <span class="md-inmo" id="md-inmo" aria-hidden="true">INMOBILIARIA</span>
-    <h1 class="md-marca" id="nosotros" aria-label="Beltrán"><span>B</span><span>E</span><span>L</span><span>T</span><span>R</span><span>Á</span><span>N</span></h1>
+    <h1 class="md-marca" aria-label="Beltrán"><span>B</span><span>E</span><span>L</span><span>T</span><span>R</span><span>Á</span><span>N</span></h1>
   </section>
   <div class="hero" hidden>
     <div class="hero-fondo" id="hero-fondo"><img alt="" id="hf-a"><img alt="" id="hf-b"></div>
@@ -628,6 +640,19 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
       <div class="sec-cab"><div><span class="ceja">Ubicación exacta</span><h2 class="tit">Cada propiedad,<br><em>en el mapa.</em></h2><p>Toca una casita para ver la propiedad.</p></div></div>
       <div id="mapa" aria-label="Mapa de propiedades"></div>
     </div>
+  </section>
+
+  <section id="nosotros" class="qs">
+    <div class="qs-txt">
+      <span class="qs-ceja">Conócenos</span>
+      <h2>Quiénes<br>somos</h2>
+      <i class="qs-raya"></i>
+      <p>Somos Beltrán Inmobiliaria, en Puyo, Pastaza. Nos dedicamos a la venta de casas, terrenos y locales comerciales, y te acompañamos desde la primera visita hasta la firma en la notaría.</p>
+      <p>Cada propiedad que publicamos tiene sus papeles revisados y su ubicación verificada en el mapa, para que compres con tranquilidad y sin enredos.</p>
+      <p>Respondemos por WhatsApp y agendamos tu visita el mismo día. También te ayudamos a vender tu casa o terreno.</p>
+      <a class="qs-btn wa-link" href="#contacto" data-msg="Hola, quisiera más información sobre Beltrán Inmobiliaria.">Escríbenos</a>
+    </div>
+    <div class="qs-img" role="img" aria-label="Casa moderna"></div>
   </section>
 
   <section id="contacto">
