@@ -481,7 +481,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .claro .ceja { color: #4d5c85; }
 .claro .chip:hover { color: #161c35; border-color: rgba(28,35,64,.3); } .claro .chip[aria-pressed="true"] { background: #252e4c; color: #fff; border-color: #252e4c; }
 .claro .orden { color: #161c35; background: #fff; }
-.claro .tarjeta { background: #363a4a; border-color: rgba(28,35,64,.08); box-shadow: 0 20px 40px -28px rgba(22,28,53,.35); }
+.claro .tarjeta { background: #fff; border-color: rgba(28,35,64,.08); box-shadow: 0 20px 40px -28px rgba(22,28,53,.35); }
 .claro .tarjeta:hover { box-shadow: 0 40px 70px -34px rgba(22,28,53,.55); border-color: rgba(77,92,133,.35); }
 .claro .tarjeta h3, .claro .tarjeta .precio { color: #161c35; }
 .claro .tarjeta::after { background: radial-gradient(340px circle at var(--mx) var(--my), rgba(77,92,133,.08), transparent 60%); }
@@ -542,10 +542,6 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 /* Header fades from transparent to solid as you scroll */
 .cab, .cab.solida { background: rgba(11, 16, 36, calc(.82 * var(--op, 0))); backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(calc(1 + .5 * var(--op, 0))); -webkit-backdrop-filter: blur(calc(16px * var(--op, 0))) saturate(calc(1 + .5 * var(--op, 0))); border-bottom-color: rgba(255,255,255, calc(.1 * var(--op, 0))); transition: height .35s; }
 
-.claro .tarjeta, .claro .tarjeta h3, .claro .tarjeta .precio, .claro .tarjeta .datos, .claro .tarjeta .datos b { color: #fff; }
-.claro .tarjeta .dir, .claro .tarjeta .datos small, .claro .tarjeta .datos span { color: #d6dbec; }
-.claro .tarjeta .datos { border-bottom-color: rgba(255,255,255,.2); }
-.claro .tarjeta .precio svg, .claro .tarjeta .datos svg, .claro .tarjeta .dir svg { color: #fff !important; stroke: currentColor; }
 </style>
 </head>
 <body>
