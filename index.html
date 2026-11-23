@@ -545,6 +545,9 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 
 .md-inmo { position: absolute; z-index: 1; transform: translate(-50%, -50%); color: #fff; font: 600 16px var(--titulos); letter-spacing: .5em; white-space: nowrap; opacity: 0; transition: opacity .8s .6s; text-shadow: 0 2px 10px rgba(0,0,0,.4); }
 .md-inmo.ok { opacity: .95; }
+
+.cab .logo { transition: opacity .5s, transform .5s var(--suavizado); }
+.cab:not(.logo-ver) .logo { opacity: 0; transform: translateY(-8px); pointer-events: none; }
 </style>
 </head>
 <body>
@@ -913,7 +916,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   const secs = enlaces.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
   let tic = false;
   const alScroll = () => { tic = false; const y = scrollY, alto = document.documentElement.scrollHeight - innerHeight;
-    cab.classList.toggle('solida', y > 30); cab.style.setProperty('--op', Math.min(1, y / 320).toFixed(3)); prog.style.transform = `scaleX(${alto > 0 ? Math.min(1, y / alto) : 0})`; arriba.classList.toggle('ver', y > innerHeight * .9);
+    cab.classList.toggle('solida', y > 30); { const t = $('md-inmo'), m = document.querySelector('.modus'); if (t && m) { const r = t.getBoundingClientRect(), mw = m.clientWidth, vis = r.left >= 0 && r.right <= mw; const lim = vis ? r.top + r.height / 2 : document.querySelector('.md-marca').getBoundingClientRect().bottom; cab.classList.toggle('logo-ver', lim < cab.offsetHeight); } else cab.classList.add('logo-ver'); } cab.style.setProperty('--op', Math.min(1, y / 320).toFixed(3)); prog.style.transform = `scaleX(${alto > 0 ? Math.min(1, y / alto) : 0})`; arriba.classList.toggle('ver', y > innerHeight * .9);
     if (y < innerHeight) fondoHero.style.transform = `translateY(${y * .22}px)`;
     let act = -1; secs.forEach((s, k) => { if (s.getBoundingClientRect().top < innerHeight * .4) act = k; }); enlaces.forEach((a, k) => a.classList.toggle('activo', k === act)); };
   addEventListener('scroll', () => { if (!tic) { tic = true; requestAnimationFrame(alScroll); } }, { passive: true }); alScroll();
