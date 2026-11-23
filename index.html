@@ -555,14 +555,16 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 @media (max-width: 760px) { .ficha > .gal2 { grid-template-rows: minmax(0, 1fr) !important; height: 420px; } .md-marca { padding-top: 22vh !important; } .md-inmo { display: none; } }
 .md-marca { padding-right: 10%; }
 
-/* Card: tall photo, details revealed on hover (desktop) */
+/* Card: tall photo, details revealed on hover (desktop) — fixed card height, no layout jump */
 @media (hover: hover) and (min-width: 561px) {
-  .grilla .tarjeta .foto { aspect-ratio: auto; height: 0; padding-top: 118%; transition: padding-top .6s var(--suavizado); }
+  .grilla .tarjeta { aspect-ratio: 10 / 15.4; }
+  .grilla .tarjeta .foto { aspect-ratio: auto; flex: 1 1 auto; min-height: 0; }
+  .grilla .tarjeta .info { flex: 0 0 auto; }
   .grilla .tarjeta .foto > img { position: absolute; inset: 0; }
   .grilla .tarjeta .datos, .grilla .tarjeta .precio { max-height: 0; min-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; border-bottom-width: 0; transition: max-height .6s var(--suavizado), opacity .4s, padding .6s var(--suavizado), margin .6s var(--suavizado); }
-  .grilla .tarjeta:hover .foto, .grilla .tarjeta:focus-visible .foto { padding-top: 75%; }
   .grilla .tarjeta:hover .datos, .grilla .tarjeta:focus-visible .datos { max-height: 90px; min-height: 59px; opacity: 1; margin-top: 12px; padding-bottom: 16px; border-bottom-width: 1px; }
   .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio { max-height: 60px; opacity: 1; padding-top: 14px; }
+  .grilla .tarjeta:hover, .grilla .tarjeta.rev.vis:hover { transform: none; }
 }
 </style>
 </head>
