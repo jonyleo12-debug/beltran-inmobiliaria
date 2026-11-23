@@ -549,6 +549,10 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 
 .cab .logo { transition: opacity .5s, transform .5s var(--suavizado); }
 .cab:not(.logo-ver) .logo { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+
+/* Photos: only dots to switch */
+.ficha > .gal2 .lado, .ficha > .gal2 .flecha { display: none !important; }
+@media (max-width: 760px) { .ficha > .gal2 { grid-template-rows: minmax(0, 1fr) !important; height: 420px; } .md-marca { padding-top: 22vh !important; } .md-inmo { display: none; } }
 </style>
 </head>
 <body>
