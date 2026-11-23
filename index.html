@@ -962,7 +962,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   function ubicarInmo() { const m = document.querySelector('.modus'), t = $('md-inmo'); if (!m || !t) return;
     const W = m.clientWidth, H = m.clientHeight, sc = Math.max(W / 1200, H / 896), bp = getComputedStyle(m, '::before').backgroundPosition.split(' ').map((v) => parseFloat(v) / 100);
     const ox = (W - 1200 * sc) * (bp[0] || .5), oy = (H - 896 * sc) * (bp[1] == null ? .5 : bp[1]);
-    t.style.left = (985 * sc + ox) + 'px'; t.style.top = (530 * sc + oy) + 'px'; t.style.fontSize = Math.max(11, 24 * sc) + 'px'; t.style.letterSpacing = (.45 * Math.max(11, 24 * sc)) + 'px'; t.classList.add('ok'); }
+    t.style.left = (1025 * sc + ox) + 'px'; t.style.top = (495 * sc + oy) + 'px'; t.style.fontSize = Math.max(11, 24 * sc) + 'px'; t.style.letterSpacing = (.45 * Math.max(11, 24 * sc)) + 'px'; t.classList.add('ok'); }
   ubicarInmo(); addEventListener('resize', ubicarInmo);
   cargar();
   // Stay current: reload when the visitor comes back to the tab, and every 2 minutes.
