@@ -579,6 +579,11 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .qs-img { background: url(assets/quienes-somos.jpg) center 40%/cover no-repeat; min-height: 420px; }
 @media (max-width: 860px) { .qs { grid-template-columns: 1fr; } .qs-img { order: -1; min-height: 300px; } .qs p { text-align: left; } }
 .arriba { display: none !important; }
+
+footer .pie { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+footer .pie b { color: #b4c1ee; font-weight: 500; }
+.redes { display: flex; gap: 28px; } .redes a { color: #b4c1ee; transition: color .2s, transform .2s; } .redes a:hover { color: #fff; transform: translateY(-2px); }
+.redes svg { width: 30px; height: 30px; display: block; }
 </style>
 </head>
 <body>
@@ -667,10 +672,13 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 </main>
 
 <footer>
-  <div class="envoltura">
-    <img src="assets/logo-blanco.png" alt="Beltrán Inmobiliaria" width="134" height="42">
-    <nav><a href="#propiedades">Propiedades</a><a href="#mapa-sec">Mapa</a><a href="#nosotros">Nosotros</a><a href="#contacto">Contacto</a></nav>
-    <span>© <span id="anio"></span> Beltrán Inmobiliaria · Puyo, Pastaza, Ecuador</span>
+  <div class="envoltura pie">
+    <span>Copyright © <span id="anio"></span> | <b>Beltrán Inmobiliaria</b></span>
+    <div class="redes">
+      <a id="r-fb" href="#" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-1.6 19.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 12 2z"/></svg></a>
+      <a id="r-ig" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg></a>
+      <a id="r-tt" href="#" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M16.6 2h-3.3v13.2a2.9 2.9 0 1 1-2.1-2.8V9a6.3 6.3 0 1 0 5.4 6.2V8.6a7.7 7.7 0 0 0 4.4 1.4V6.7a4.4 4.4 0 0 1-4.4-4.7z"/></svg></a>
+    </div>
   </div>
 </footer>
 
@@ -1015,6 +1023,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     const ox = (W - 1200 * sc) * (bp[0] || .5), oy = (H - 896 * sc) * (bp[1] == null ? .5 : bp[1]);
     t.style.left = (967 * sc + ox) + 'px'; t.style.top = (536 * sc + oy) + 'px'; t.style.fontSize = Math.max(11, 22 * sc) + 'px'; t.style.letterSpacing = (.45 * Math.max(11, 22 * sc)) + 'px'; t.classList.add('ok'); }
   ubicarInmo(); addEventListener('resize', ubicarInmo);
+  [['r-fb', 'facebook'], ['r-ig', 'instagram'], ['r-tt', 'tiktok']].forEach(([id, k]) => { const a = $(id); if (a && CFG[k]) a.href = CFG[k]; });
   cargar();
   // Stay current: reload when the visitor comes back to the tab, and every 2 minutes.
   document.addEventListener('visibilitychange', () => { if (!document.hidden && Date.now() - ultimaCarga > 120000) cargar(); });

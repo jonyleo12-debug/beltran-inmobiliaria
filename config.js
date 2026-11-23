@@ -4,6 +4,10 @@ window.BELTRAN = {
   sitio: 'beltran',
   whatsapp: '593979269302',
   correo: '',
+  // Enlaces de redes sociales (pega la dirección completa de tu página)
+  facebook: '',
+  instagram: '',
+  tiktok: '',
   // Clave de Google Maps solo para esta página (restringida a jonyleo12-debug.github.io). Vacía = mapa satélite gratis.
   gmapsKey: 'AIzaSyD8bd2dwCk5fX03gDldDfof1skf81ySl28'
 };
