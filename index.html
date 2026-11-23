@@ -578,6 +578,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .qs-btn:hover { background: #4d5c85; color: #fff; }
 .qs-img { background: url(assets/quienes-somos.jpg) center 40%/cover no-repeat; min-height: 420px; }
 @media (max-width: 860px) { .qs { grid-template-columns: 1fr; } .qs-img { order: -1; min-height: 300px; } .qs p { text-align: left; } }
+.arriba { display: none !important; }
 </style>
 </head>
 <body>
@@ -629,7 +630,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     <div class="envoltura">
       <div class="sec-cab">
         <div><span class="ceja">Propiedades en venta</span><h2 class="tit">Hogares reales.<br><em>Precios claros.</em></h2><p id="conteo">Cargando propiedades…</p></div>
-        <div class="filtros"><div class="chips" id="chips"></div><select class="orden" id="orden" aria-label="Ordenar"><option value="">Recomendadas</option><option value="menor">Precio: menor a mayor</option><option value="mayor">Precio: mayor a menor</option><option value="nuevas">Más nuevas</option></select></div>
+        <div class="filtros"><div class="chips" id="chips"></div><select class="orden" id="orden" aria-label="Ordenar" hidden><option value="">Recomendadas</option><option value="menor">Precio: menor a mayor</option><option value="mayor">Precio: mayor a menor</option><option value="nuevas">Más nuevas</option></select></div>
       </div>
       <div class="grilla" id="grilla"><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div><div class="cargando"></div></div>
     </div>
@@ -802,7 +803,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
     if (dest.length > 1) destT = setInterval(() => { if (!document.hidden && $('detalle').hidden && !c.matches(':hover') && scrollY < innerHeight) mostrarDest((destK + 1) % dest.length); }, 7000);
   }
   function pintar() {
-    const vs = visibles(), o = $('orden').value; if (ORDEN[o]) vs.sort(ORDEN[o]);
+    const vs = visibles(); vs.sort((a, b) => (a.precio ? 0 : 1) - (b.precio ? 0 : 1) || (a.precio || 0) - (b.precio || 0));
     $('conteo').textContent = props.length ? `${vs.length} propiedad${vs.length === 1 ? '' : 'es'} disponible${vs.length === 1 ? '' : 's'}` : 'Muy pronto publicaremos nuestras propiedades.';
     $('grilla').replaceChildren(...(vs.length ? vs.map((p, k) => { const t = tarjeta(p); if (!vistos.has(p.id)) { vistos.add(p.id); revelar(t, k); } return t; }) : [vacio()]));
     pintarMapa(vs);
