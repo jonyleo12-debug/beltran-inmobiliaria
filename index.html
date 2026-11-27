@@ -662,6 +662,22 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .mp-cerrar { position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; }
 .mp-cerrar:hover { background: rgba(255,255,255,.18); }
 @media (max-width: 640px) { .mapa-pop { grid-template-columns: 104px 1fr; gap: 12px; top: 8px; padding: 8px; border-radius: 18px; width: calc(100% - 16px); } .mp-foto { min-height: 0; border-radius: 12px; } .mp-foto .estado { display: none; } .mp-info { gap: 3px; padding: 2px 30px 2px 0; } .mp-tipo { font-size: 9.5px; } .mp-info h3 { font-size: 22px; } .mp-precio { font-size: 18px; } .mp-dir { font-size: 12.5px; } .mp-info .datos, .mp-servs { display: none; } .mp-acc { margin-top: 6px; gap: 6px; } .mp-acc .btn { padding: 8px 12px; font-size: 12.5px; } .mp-acc .btn .fl { display: none; } .mp-cerrar { width: 28px; height: 28px; right: 8px; top: 8px; } }
+/* tarjeta del mapa más compacta */
+@media (min-width: 641px) {
+  .mapa-pop { width: min(520px, calc(100% - 24px)); grid-template-columns: 175px 1fr; gap: 16px; padding: 11px; border-radius: 20px; }
+  .mp-foto { min-height: 160px; border-radius: 13px; }
+  .mp-foto .estado { font-size: 9.5px; padding: 4px 9px; }
+  .mp-info { gap: 4px; padding: 2px 30px 2px 0; }
+  .mp-tipo { font-size: 10px; }
+  .mp-info h3 { font-size: 24px; }
+  .mp-precio { font-size: 20px; }
+  .mp-dir { font-size: 12.5px; }
+  .mp-info .datos { padding: 6px 10px; gap: 14px; font-size: 12.5px; border-radius: 10px; }
+  .mp-servs { font-size: 12px; gap: 4px 10px; } .mp-servs svg { width: 14px; height: 14px; }
+  .mp-acc { margin-top: 6px; gap: 8px; }
+  .mp-acc .btn { padding: 8px 14px; font-size: 13px; } .mp-acc .btn .fl { width: 24px; height: 24px; }
+  .mp-cerrar { width: 28px; height: 28px; right: 10px; top: 10px; font-size: 16px; }
+}
 </style>
 </head>
 <body>
@@ -987,7 +1003,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
       <button class="mp-cerrar" type="button" aria-label="Cerrar">×</button>`;
     box.hidden = false; box.style.animation = 'none'; void box.offsetWidth; box.style.animation = '';
     box.querySelector('.mp-cerrar').addEventListener('click', cerrarPop);
-    const baja = innerWidth < 640 ? 70 : 140;
+    const baja = innerWidth < 640 ? 70 : 100;
     if (window.google && mapa && mapa.panTo && !mapa.project) { mapa.panTo({ lat: p.lat, lng: p.lng }); mapa.panBy(0, -baja); }
     else if (mapa && mapa.project) { const pt = mapa.project([p.lat, p.lng], mapa.getZoom()).subtract([0, baja]); mapa.panTo(mapa.unproject(pt, mapa.getZoom())); }
   }
