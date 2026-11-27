@@ -585,6 +585,14 @@ footer .pie { display: flex; justify-content: space-between; align-items: center
 footer .pie b { color: #b4c1ee; font-weight: 500; }
 .redes { display: flex; gap: 28px; } .redes a { color: #b4c1ee; transition: color .2s, transform .2s; } .redes a:hover { color: #fff; transform: translateY(-2px); }
 .redes svg { width: 30px; height: 30px; display: block; }
+/* foto de la ficha de borde a borde (sin marco blanco) */
+@media (max-width: 999px) {
+  .ficha:has(> .gal2) { border: 0; }
+  .ficha > .gal2 { padding: 0; gap: 0; }
+  .ficha > .gal2 .portada { border-radius: 0; }
+  .ficha > .gal2 .lado { padding: 10px; }
+}
+@media (max-width: 760px) { .ficha > .gal2:not(.inicio) { grid-template-rows: minmax(0, 1fr) 96px; } .ficha > .gal2 .lado { padding: 6px; } }
 </style>
 </head>
 <body>
