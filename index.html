@@ -663,6 +663,10 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .mp-cerrar:hover { background: rgba(255,255,255,.18); }
 @media (max-width: 640px) { .mapa-pop { grid-template-columns: 104px 1fr; gap: 12px; top: 8px; padding: 8px; border-radius: 18px; width: calc(100% - 16px); } .mp-foto { min-height: 0; border-radius: 12px; } .mp-foto .estado { display: none; } .mp-info { gap: 3px; padding: 2px 30px 2px 0; } .mp-tipo { font-size: 9.5px; } .mp-info h3 { font-size: 22px; } .mp-precio { font-size: 18px; } .mp-dir { font-size: 12.5px; } .mp-info .datos, .mp-servs { display: none; } .mp-acc { margin-top: 6px; gap: 6px; } .mp-acc .btn { padding: 8px 12px; font-size: 12.5px; } .mp-acc .btn .fl { display: none; } .mp-cerrar { width: 28px; height: 28px; right: 8px; top: 8px; } }
 #mapa-sec { background: #171c33; padding-bottom: clamp(64px, 8vw, 110px); }
+.promo-tag { position: absolute; z-index: 2; left: 14px; top: 46px; padding: 5px 11px; border-radius: 7px; font: 700 10.5px var(--titulos); letter-spacing: .14em; text-transform: uppercase; color: #fff; box-shadow: 0 4px 14px -4px rgba(0,0,0,.5); }
+.mp-foto .promo-tag { left: 10px; top: 42px; }
+.pin-casa.promo .pill-t { background: var(--promo); color: #fff; }
+.ficha .cuerpo .promo-tag { position: static; display: inline-block; margin-left: 8px; font-size: 13px; padding: 10px 16px; border-radius: 10px; vertical-align: top; }
 </style>
 </head>
 <body>
@@ -892,7 +896,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '')); a.href = '#p/' + p.id;
     const fotos = p.fotos || [];
     a.innerHTML = `<div class="foto">${fotos[0] ? `<img src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo)}" loading="lazy">` : '<div class="sin"><img src="assets/icono.svg?v=3" alt=""></div>'}
-      <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span><button class="cora" type="button" aria-label="Guardar en favoritas" aria-pressed="${favs.has(p.id)}">${CORAZON}</button>${fotos.length > 1 ? `<div class="pfotos">${fotos.slice(0, 8).map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
+      <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>${promoTag(p)}<button class="cora" type="button" aria-label="Guardar en favoritas" aria-pressed="${favs.has(p.id)}">${CORAZON}</button>${fotos.length > 1 ? `<div class="pfotos">${fotos.slice(0, 8).map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
       <div class="info"><h3>${esc(p.nombre || p.tipo || 'Propiedad en venta')}</h3>
       <span class="dir">${ICO.pin}<span>${esc(lugar(p))}</span></span><div class="datos">${datosHtml(p)}</div>
       <div class="precio">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}${FLECHA}</div></div>`;
@@ -972,13 +976,16 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     'Otro': 'M12 2.8l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.6l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z'
   };
   const PIN_COLOR = { Vendida: '#8a8a8a', Reservada: '#c9952b' };
+  const PROMO = { oferta: { t: 'Oferta especial', c: '#c9a227' }, descuento: { t: 'Descuento', c: '#ff6347' } };
+  const promoDe = (p) => (p.estado !== 'Vendida' && PROMO[p.promo]) || null;
+  const promoTag = (p) => promoDe(p) ? `<span class="promo-tag" style="background:${promoDe(p).c}">${promoDe(p).t}</span>` : '';
   const precioCorto = (n) => n >= 10000 ? '$' + (Math.round(n / 100) / 10).toString().replace('.', ',') + 'k' : usd.format(n);
   // Tarjeta de la propiedad sobre el mapa (al tocar una casita)
   function popMapa(p) {
     const box = $('mapa-pop'); if (!box) return;
     const f = (p.fotos || [])[0], servs = [...Object.keys(SERV).filter((k) => (p.servicios || []).includes(k))];
     const dest = p.lat != null ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}` : '';
-    box.innerHTML = `<div class="mp-foto">${f ? `<img src="${esc(f)}" alt="${esc(p.nombre || p.tipo)}">` : '<div class="sin"><img src="assets/icono.svg?v=3" alt=""></div>'}<span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span></div>
+    box.innerHTML = `<div class="mp-foto">${f ? `<img src="${esc(f)}" alt="${esc(p.nombre || p.tipo)}">` : '<div class="sin"><img src="assets/icono.svg?v=3" alt=""></div>'}<span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>${promoTag(p)}</div>
       <div class="mp-info"><span class="mp-tipo"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${esc(p.tipo || 'Propiedad')}</span><h3>${esc(p.nombre || p.tipo || 'Propiedad')}</h3>
       <div class="mp-precio">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div>
       <div class="mp-dir">${ICO.pin}<span>${esc(p.dir || 'Puyo, Pastaza')}</span></div>
@@ -994,7 +1001,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   }
   function cerrarPop() { const box = $('mapa-pop'); if (box) box.hidden = true; }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPop(); });
-  const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}" data-id="${esc(p.id)}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
+  const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}${promoDe(p) ? ' promo' : ''}" data-id="${esc(p.id)}" style="${promoDe(p) ? '--promo:' + promoDe(p).c : ''}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${(promoDe(p) || {}).c || PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
   function pinG(m, p, click) {
     const o = new google.maps.OverlayView(), pos = new google.maps.LatLng(p.lat, p.lng);
     o.onAdd = function () { const d = document.createElement('div'); d.style.cssText = 'position:absolute;cursor:pointer'; d.innerHTML = htmlPin(p); d.title = p.nombre || p.tipo || ''; if (click) d.addEventListener('click', click); this.div = d; this.getPanes().overlayMouseTarget.appendChild(d); };
@@ -1044,7 +1051,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     d.innerHTML = `<div class="ficha"><button class="cerrar" type="button" aria-label="Cerrar">×</button>
       ${fotos.length ? `<div class="gal2 inicio"><div class="portada"><img class="principal" src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo || '')}"><span class="p-tit">${esc(p.nombre || p.tipo || 'Propiedad')}</span>${fotos.length > 1 ? `<button class="flecha ant" type="button" aria-label="Foto anterior">‹</button><button class="flecha sig" type="button" aria-label="Foto siguiente">›</button>` : ''}${fotos.length > 1 ? `<span class="sp-pts p-pts">${fotos.map((f, k) => `<button type="button" data-k="${k}" aria-label="Foto ${k + 1}"${k ? '' : ' aria-current="true"'}></button>`).join('')}</span>` : ''}<span class="p-pie"><span>${esc(lugar(p))}</span><span>${p.precio ? usd.format(p.precio) : ''}</span></span></div>${fotos.length > 2 ? `<div class="lado">${fotos.slice(2).map((f, j) => `<button type="button" class="lf" data-pos="${j + 1}" aria-label="Ver foto"><img src="${esc(f)}" alt="" loading="${j < 3 ? 'eager' : 'lazy'}"></button>`).join('')}</div>` : ''}</div>` : ''}
       <div class="cuerpo"><div>
-        <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>
+        <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span>${promoTag(p)}
         <h2 id="d-titulo">${esc(p.nombre || p.tipo || 'Propiedad')}</h2>
         ${p.dir ? `<div class="dir">${ICO.pin}${esc(p.dir)}</div>` : ''}
         <div class="precio-g">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div>
