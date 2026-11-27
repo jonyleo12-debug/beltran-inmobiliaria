@@ -676,6 +676,16 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .promo-tag { transform-origin: left center; animation: latePromo 1.6s ease-in-out infinite; }
 @keyframes latePromo { 0%, 60%, 100% { transform: scale(1); } 15% { transform: scale(1.1); } 30% { transform: scale(1); } 45% { transform: scale(1.06); } }
 @media (prefers-reduced-motion: reduce) { .promo-tag { animation: none; } }
+/* sección del mapa: foto a la izquierda, títulos estilo Quiénes somos */
+#mapa-sec.mapa-split { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr); padding: 0; background: #171c33; min-height: 720px; }
+.ms-img { background: url(assets/mapa-lado.jpg) center 30%/cover no-repeat; min-height: 420px; }
+.ms-cont { padding: clamp(48px, 6vw, 96px) clamp(24px, 5vw, 80px); align-self: center; min-width: 0; }
+.ms-cont .qs-ceja { color: #d3d8ea; }
+.ms-cont h2 { margin: 6px 0 0; font: 400 clamp(52px, 5.4vw, 86px)/.95 var(--display); color: #fff; }
+.ms-cont .qs-raya { background: var(--acento); margin: 26px 0 22px; }
+.ms-cont p { margin: 0 0 28px; color: #cfd3e3; font-size: 16px; }
+.ms-cont #mapa { height: 520px; }
+@media (max-width: 900px) { #mapa-sec.mapa-split { grid-template-columns: 1fr; } .ms-img { min-height: 300px; } .ms-cont #mapa { height: 440px; } }
 </style>
 </head>
 <body>
@@ -734,9 +744,13 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     </div>
   </section>
 
-  <section id="mapa-sec" style="padding-top:64px">
-    <div class="envoltura">
-      <div class="sec-cab"><div><span class="ceja">Ubicación exacta</span><h2 class="tit">Cada propiedad,<br><em>en el mapa.</em></h2><p>Toca una casita para ver la propiedad.</p></div></div>
+  <section id="mapa-sec" class="mapa-split">
+    <div class="ms-img" role="img" aria-label="Persona buscando una propiedad en el mapa"></div>
+    <div class="ms-cont">
+      <span class="qs-ceja">Ubicación exacta</span>
+      <h2>Cada propiedad<br>en el mapa</h2>
+      <i class="qs-raya"></i>
+      <p>Toca una casita para ver la propiedad.</p>
       <div class="mapa-caja"><div id="mapa" aria-label="Mapa de propiedades"></div><div class="mapa-pop" id="mapa-pop" hidden></div></div>
     </div>
   </section>
