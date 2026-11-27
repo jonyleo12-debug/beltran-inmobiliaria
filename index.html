@@ -686,6 +686,9 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .ms-cont p { margin: 0 0 28px; color: #cfd3e3; font-size: 16px; }
 .ms-cont #mapa { height: 520px; }
 @media (max-width: 900px) { #mapa-sec.mapa-split { grid-template-columns: 1fr; } .ms-img { min-height: 300px; } .ms-cont #mapa { height: 440px; } }
+/* Propiedades a todo el ancho */
+#propiedades > .envoltura { width: calc(100% - 2 * clamp(16px, 4vw, 72px)); }
+@media (min-width: 1201px) { #propiedades .grilla { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); } }
 </style>
 </head>
 <body>
