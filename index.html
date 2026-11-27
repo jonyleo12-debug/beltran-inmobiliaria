@@ -1016,7 +1016,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     o.setMap(m); return o;
   }
   function poligonoG(m, p) {
-    return new google.maps.Polygon({ map: m, paths: p.poligono.map((q) => ({ lat: q.lat, lng: q.lng })), strokeColor: '#2e51a1', strokeWeight: 2, fillColor: '#2e51a1', fillOpacity: .3, clickable: false });
+    return new google.maps.Polygon({ map: m, paths: p.poligono.map((q) => ({ lat: q.lat, lng: q.lng })), strokeColor: (promoDe(p) || {}).c || '#2e51a1', strokeWeight: 2, fillColor: (promoDe(p) || {}).c || '#2e51a1', fillOpacity: .3, clickable: false });
   }
   const LIMPIO = [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }, { featureType: 'transit', stylers: [{ visibility: 'off' }] }, { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] }, { featureType: 'landscape', stylers: [{ saturation: -60 }, { lightness: 20 }] }, { featureType: 'water', stylers: [{ saturation: -30 }, { lightness: 10 }] }];
   const opcG = { styles: LIMPIO, mapTypeControl: true, mapTypeControlOptions: { mapTypeIds: ['roadmap', 'hybrid'] }, streetViewControl: false, gestureHandling: 'greedy', clickableIcons: false };
@@ -1043,7 +1043,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     iniciarMapa(); if (!mapa) return; capa.clearLayers();
     const con = vs.filter((p) => p.lat != null && p.lng != null);
     con.forEach((p) => {
-      if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(capa);
+      if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: promoDe(p) ? promoDe(p).c : '#ffffff', fillColor: (promoDe(p) || {}).c || '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(capa);
       const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
       m.on('click', (e) => { if (e.originalEvent) L.DomEvent.stopPropagation(e); popMapa(p); });
     });
@@ -1111,7 +1111,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
       const mf = mapaFicha; const fin = () => { if ((p.poligono || []).length > 2) mf.setView(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17.5); else mf.setView([p.lat, p.lng], 17.5); };
       if (!animarL) fin(); else setTimeout(() => { if (mapaFicha !== mf) return; if ((p.poligono || []).length > 2) mf.flyTo(L.latLngBounds(p.poligono.map((q) => [q.lat, q.lng])).getCenter(), 17.5, { duration: 5, easeLinearity: .15 }); else mf.flyTo([p.lat, p.lng], 17.5, { duration: 5, easeLinearity: .15 }); }, 500);
       satelite(mapaFicha);
-      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); }
+      if ((p.poligono || []).length > 2) { const pg = L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: promoDe(p) ? promoDe(p).c : '#ffffff', fillColor: (promoDe(p) || {}).c || '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(mapaFicha); }
       L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }) }).addTo(mapaFicha);
     }, 50);
     document.title = (p.nombre || p.tipo || 'Propiedad') + ' · Beltrán Inmobiliaria';
