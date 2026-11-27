@@ -563,8 +563,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .grilla .tarjeta .info { flex: 0 0 auto; }
   .grilla .tarjeta .foto > img { position: absolute; inset: 0; }
   .grilla .tarjeta .datos, .grilla .tarjeta .precio { max-height: 0; min-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; border-bottom-width: 0; transition: max-height .6s var(--suavizado), opacity .4s, padding .6s var(--suavizado), margin .6s var(--suavizado); }
-  .grilla .tarjeta:hover .datos, .grilla .tarjeta:focus-visible .datos, .grilla .tarjeta.abierta .datos { max-height: 90px; min-height: 59px; opacity: 1; margin-top: 12px; padding-bottom: 16px; border-bottom-width: 1px; }
-  .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio, .grilla .tarjeta.abierta .precio { max-height: 60px; opacity: 1; padding-top: 14px; }
+  @media (hover: hover) and (pointer: fine) { .grilla .tarjeta:hover .datos, .grilla .tarjeta:focus-visible .datos, .grilla .tarjeta.abierta .datos { max-height: 90px; min-height: 59px; opacity: 1; margin-top: 12px; padding-bottom: 16px; border-bottom-width: 1px; } }
+  @media (hover: hover) and (pointer: fine) { .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio, .grilla .tarjeta.abierta .precio { max-height: 60px; opacity: 1; padding-top: 14px; } }
   .grilla .tarjeta:hover, .grilla .tarjeta.rev.vis:hover { transform: none; }
 }
 
@@ -694,6 +694,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .modus::before { background-position: center 82% !important; }
 .md-marca, .md-marca.md-marca { position: absolute; left: 0; right: 0; top: 3.6vw; padding: 0 10% 0 0 !important; font-size: 15vw !important; }
 .md-inmo { display: block !important; }
+@media (hover: none), (pointer: coarse) { .grilla .tarjeta .datos, .grilla .tarjeta .precio { display: none !important; } }
 </style>
 </head>
 <body>
