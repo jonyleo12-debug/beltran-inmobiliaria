@@ -636,6 +636,11 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .serv-caja:has(.serv-it:hover) .serv-tit, .serv-caja:has(.serv-it:hover) .serv-btn { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
 .serv-caja:has(.serv-it:hover) .serv-it { background: rgba(11, 16, 36, .35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
 .serv-caja .serv-it:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+/* iconos de cristal */
+.serv-ic { transition: background .4s, border-color .4s, box-shadow .4s, transform .4s var(--suavizado); }
+.serv-caja:has(.serv-it:hover) .serv-ic { background: linear-gradient(145deg, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)); border-color: rgba(255,255,255,.5); box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(255,255,255,.12), 0 10px 24px -10px rgba(0,0,0,.55); }
+.serv-it:hover .serv-ic { background: linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.04) 55%, rgba(255,255,255,.16)); border-color: rgba(255,255,255,.7); transform: translateY(-2px); }
+.serv-caja:has(.serv-it:hover) .serv-ic svg { filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
 </style>
 </head>
 <body>
