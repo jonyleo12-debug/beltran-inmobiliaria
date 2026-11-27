@@ -695,6 +695,9 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .md-marca, .md-marca.md-marca { position: absolute; left: 0; right: 0; top: 3.6vw; padding: 0 10% 0 0 !important; font-size: 15vw !important; }
 .md-inmo { display: block !important; }
 @media (hover: none), (pointer: coarse) { .grilla .tarjeta .datos, .grilla .tarjeta .precio { display: none !important; } }
+.ficha .estado::before { animation: puntoLuz 1.4s ease-in-out infinite; box-shadow: 0 0 6px currentColor; }
+@keyframes puntoLuz { 0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--ok); } 50% { opacity: .15; box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .ficha .estado::before { animation: none; } }
 </style>
 </head>
 <body>
