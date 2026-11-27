@@ -922,13 +922,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   let favs = new Set(); try { favs = new Set(JSON.parse(localStorage.getItem('beltran-fav') || '[]')); } catch (e) {}
   const guardarFavs = () => { try { localStorage.setItem('beltran-fav', JSON.stringify([...favs])); } catch (e) {} };
   const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  // Celular: si la pantalla queda quieta unos 3 s, la tarjeta del centro muestra sus datos; al moverse se ocultan.
-  const enCentro = new Set(); let quieto = null;
-  const obsAbre = ('IntersectionObserver' in window && matchMedia('(hover: none)').matches) ? new IntersectionObserver((es) => es.forEach((e) => { e.isIntersecting ? enCentro.add(e.target) : enCentro.delete(e.target); }), { rootMargin: '-30% 0px -30% 0px' }) : null;
-  if (obsAbre) {
-    const esperar = () => { document.querySelectorAll('.tarjeta.abierta').forEach((t) => t.classList.remove('abierta')); clearTimeout(quieto); quieto = setTimeout(() => enCentro.forEach((t) => t.isConnected && t.classList.add('abierta')), 3000); };
-    addEventListener('scroll', esperar, { passive: true }); addEventListener('touchstart', esperar, { passive: true }); setTimeout(esperar, 500);
-  }
+  const obsAbre = null;
   function tarjeta(p) {
     const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '') + (promoDe(p) ? ' promo' : '')); a.href = '#p/' + p.id; if (promoDe(p)) a.style.setProperty('--promo', promoDe(p).c);
     const fotos = p.fotos || [];
