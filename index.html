@@ -1041,9 +1041,6 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
       <button class="mp-cerrar" type="button" aria-label="Cerrar">×</button>`;
     box.hidden = false; box.style.animation = 'none'; void box.offsetWidth; box.style.animation = '';
     box.querySelector('.mp-cerrar').addEventListener('click', cerrarPop);
-    const baja = innerWidth < 640 ? 70 : 140;
-    if (window.google && mapa && mapa.panTo && !mapa.project) { mapa.panTo({ lat: p.lat, lng: p.lng }); mapa.panBy(0, -baja); }
-    else if (mapa && mapa.project) { const pt = mapa.project([p.lat, p.lng], mapa.getZoom()).subtract([0, baja]); mapa.panTo(mapa.unproject(pt, mapa.getZoom())); }
   }
   function cerrarPop() { const box = $('mapa-pop'); if (box) box.hidden = true; }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPop(); });
