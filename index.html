@@ -630,17 +630,15 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .cform-mapa { height: 100%; min-height: 460px; border-radius: 6px; overflow: hidden; background: #0b1024; }
 .cform-mapa iframe { display: block; width: 100%; height: 100%; min-height: 460px; border: 0; }
 @media (max-width: 900px) { .cform { grid-template-columns: 1fr; } .cform form { grid-template-columns: 1fr; } .cform-mapa, .cform-mapa iframe { min-height: 320px; } }
-/* al pasar el cursor por un servicio, el panel azul se vuelve cristal */
-.serv-caja { transition: background .5s ease, box-shadow .5s ease, -webkit-backdrop-filter .5s ease, backdrop-filter .5s ease; }
-.serv-caja:has(.serv-it:hover) { background: rgba(22, 28, 53, .14); -webkit-backdrop-filter: blur(3px) saturate(120%); backdrop-filter: blur(3px) saturate(120%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.28), 0 40px 80px -40px rgba(0,0,0,.6); }
-.serv-caja:has(.serv-it:hover) .serv-tit, .serv-caja:has(.serv-it:hover) .serv-btn { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
-.serv-caja:has(.serv-it:hover) .serv-it { background: rgba(11, 16, 36, .35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
-.serv-caja .serv-it:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
-/* iconos de cristal */
-.serv-ic { transition: background .4s, border-color .4s, box-shadow .4s, transform .4s var(--suavizado); }
-.serv-caja:has(.serv-it:hover) .serv-ic { background: linear-gradient(145deg, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)); border-color: rgba(255,255,255,.5); box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(255,255,255,.12), 0 10px 24px -10px rgba(0,0,0,.55); }
-.serv-it:hover .serv-ic { background: linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.04) 55%, rgba(255,255,255,.16)); border-color: rgba(255,255,255,.7); transform: translateY(-2px); }
-.serv-caja:has(.serv-it:hover) .serv-ic svg { filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
+/* cristal al llegar; se oscurece al bajar (--o: 0 cristal → 1 azul original, lo pone el JS) */
+.serv-caja { --o: 0; --c: calc(1 - var(--o)); background: rgba(22, 28, 53, calc(.14 + .86 * var(--o))); -webkit-backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); box-shadow: inset 0 0 0 1px rgba(255,255,255, calc(.28 * var(--c))), 0 40px 80px -40px rgba(0,0,0,.7); }
+.serv-caja .serv-tit, .serv-caja .serv-btn, .serv-caja .serv-it { text-shadow: 0 2px 14px rgba(0,0,0, calc(.75 * var(--c))); }
+.serv-caja .serv-it { background: rgba(11, 16, 36, calc(.35 * var(--c))); border-color: rgba(255,255,255, calc(.12 + .2 * var(--c))); -webkit-backdrop-filter: blur(calc(10px * var(--c))); backdrop-filter: blur(calc(10px * var(--c))); }
+.serv-caja .serv-it:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255,255,255,.6); }
+.serv-ic { position: relative; overflow: hidden; border-color: rgba(255,255,255, calc(.16 + .34 * var(--c))); box-shadow: inset 0 1px 0 rgba(255,255,255, calc(.6 * var(--c))), 0 10px 24px -10px rgba(0,0,0, calc(.55 * var(--c))); transition: transform .4s var(--suavizado), border-color .3s; }
+.serv-ic::before { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)); opacity: var(--c); pointer-events: none; }
+.serv-ic svg { position: relative; filter: drop-shadow(0 2px 6px rgba(0,0,0, calc(.6 * var(--c)))); }
+.serv-it:hover .serv-ic { border-color: rgba(255,255,255,.7); transform: translateY(-2px); }
 </style>
 </head>
 <body>
@@ -803,6 +801,11 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   const waUrl = (msg) => CFG.whatsapp ? `https://wa.me/${String(CFG.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : '#contacto';
   document.querySelectorAll('.wa-link').forEach((a) => { a.href = waUrl(a.dataset.msg || 'Hola'); if (CFG.whatsapp) { a.target = '_blank'; a.rel = 'noopener'; } });
   if (CFG.correo) { const c = $('correo-link'); if (c) { c.hidden = false; c.href = 'mailto:' + CFG.correo; } }
+  (() => {
+    const caja = document.querySelector('.serv-caja'); if (!caja) return; let pend = false;
+    const pinta = () => { pend = false; const r = caja.getBoundingClientRect(), vh = innerHeight; const o = Math.min(1, Math.max(0, (vh * .75 - r.top) / (vh * .6))); caja.style.setProperty('--o', o.toFixed(3)); };
+    addEventListener('scroll', () => { if (!pend) { pend = true; requestAnimationFrame(pinta); } }, { passive: true }); addEventListener('resize', pinta); pinta();
+  })();
   (() => {
     const caja = $('cform-mapa');
     if (caja) { const q = encodeURIComponent(CFG.oficina || 'Puyo, Pastaza, Ecuador'); caja.innerHTML = `<iframe title="Ubicación de Beltrán Inmobiliaria" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${q}&z=16&output=embed"></iframe>`; }
