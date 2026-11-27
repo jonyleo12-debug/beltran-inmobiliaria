@@ -594,6 +594,42 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   .ficha > .gal2 .lado { padding: 10px; }
 }
 @media (max-width: 760px) { .ficha > .gal2:not(.inicio) { grid-template-rows: minmax(0, 1fr) 96px; } .ficha > .gal2 .lado { padding: 6px; } }
+
+/* ===== Servicios ===== */
+.serv-sec { position: relative; padding: clamp(70px, 10vw, 140px) 0; background: url(assets/portada-casa.jpg) center 55%/cover no-repeat; }
+.serv-caja { display: grid; grid-template-columns: minmax(220px, .8fr) 2fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(32px, 4vw, 56px); border-radius: 22px; background: #161c35; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
+.serv-tit { margin: 0; font: 400 clamp(26px, 2.6vw, 38px)/1.15 var(--titulos); color: #fff; }
+.serv-tit b { display: block; font: 400 clamp(48px, 4.6vw, 70px)/.95 var(--display); letter-spacing: .02em; }
+.serv-btn { display: inline-block; margin-top: 30px; padding: 15px 34px; border: 2px solid var(--acento); border-radius: 999px; color: #fff; font: 600 15px var(--titulos); text-decoration: none; transition: background .25s, color .25s; }
+.serv-btn:hover { background: var(--acento); color: #131a38; }
+.serv-lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.serv-it { display: grid; justify-items: center; align-content: center; gap: 22px; padding: 38px 18px; border-radius: 18px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); color: #fff; text-align: center; text-decoration: none; transition: transform .3s var(--suavizado), background .3s, border-color .3s; }
+.serv-it:hover { transform: translateY(-5px); background: rgba(255,255,255,.09); border-color: var(--acento); }
+.serv-ic { width: 76px; height: 76px; border-radius: 16px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.07); }
+.serv-ic svg { width: 40px; height: 40px; }
+.serv-it span { font: 400 19px/1.35 var(--titulos); }
+.serv-it span b { display: block; font-weight: 700; font-size: 21px; }
+@media (max-width: 900px) { .serv-caja { grid-template-columns: 1fr; } .serv-lista { grid-template-columns: 1fr; } .serv-it { grid-template-columns: auto 1fr; justify-items: start; text-align: left; padding: 20px; gap: 18px; } .serv-ic { width: 62px; height: 62px; } }
+
+/* ===== Contacto con formulario ===== */
+.cform-sec { background: #161c35; padding: clamp(64px, 8vw, 110px) 0; }
+.cform { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+.cform h2 { margin: 0; font: 300 clamp(30px, 3.4vw, 48px)/1.1 var(--titulos); color: #fff; }
+.cform h2 b { display: block; margin-top: 6px; font: 400 clamp(48px, 5vw, 76px)/.95 var(--display); letter-spacing: .02em; }
+.cform form { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 36px; }
+.cform input:not([type=checkbox]), .cform textarea { width: 100%; padding: 18px 20px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.85); background: transparent; color: #fff; font: 500 16px var(--cuerpo); outline: none; transition: border-color .2s, background .2s; }
+.cform input::placeholder, .cform textarea::placeholder { color: rgba(255,255,255,.75); }
+.cform input:focus, .cform textarea:focus { border-color: var(--acento); background: rgba(255,255,255,.05); }
+.cform .ancho { grid-column: 1 / -1; }
+.cform textarea { min-height: 130px; resize: vertical; }
+.cform .acepto { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; color: #d3d8ea; font-size: 15px; line-height: 1.5; cursor: pointer; }
+.cform .acepto input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--acento); }
+.cform .enviar { grid-column: 1 / -1; justify-self: start; margin-top: 6px; padding: 18px 54px; border: 0; border-radius: 999px; background: linear-gradient(135deg, #d5dcf6, var(--acento) 45%, var(--acento-2)); color: #131a38; font: 700 16px var(--titulos); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: transform .2s; }
+.cform .enviar:hover { transform: translateY(-2px); }
+.cform .aviso { grid-column: 1 / -1; margin: 0; color: #f3b0b0; font-size: 14px; min-height: 1em; }
+.cform-mapa { height: 100%; min-height: 460px; border-radius: 6px; overflow: hidden; background: #0b1024; }
+.cform-mapa iframe { display: block; width: 100%; height: 100%; min-height: 460px; border: 0; }
+@media (max-width: 900px) { .cform { grid-template-columns: 1fr; } .cform form { grid-template-columns: 1fr; } .cform-mapa, .cform-mapa iframe { min-height: 320px; } }
 </style>
 </head>
 <body>
@@ -606,6 +642,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
       <a class="enl" href="#propiedades">Propiedades</a>
       <a class="enl" href="#mapa-sec">Mapa</a>
       <a class="enl" href="#nosotros">Nosotros</a>
+      <a class="enl" href="#servicios">Servicios</a>
       <a class="enl" href="#contacto">Contacto</a>
       <a class="btn btn-acento wa-link" href="#contacto" data-msg="Hola, quisiera agendar una visita.">Agenda una visita<span class="fl"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>
     </nav>
@@ -671,12 +708,39 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     <div class="qs-img" role="img" aria-label="Casa moderna"></div>
   </section>
 
-  <section id="contacto">
+  <section id="servicios" class="serv-sec">
     <div class="envoltura">
-      <div class="contacto">
-        <div><span class="ceja">Hablemos</span><h2 class="tit">¿Quieres vender o<br><em>comprar una propiedad?</em></h2><p>Escríbenos y te ayudamos. También publicamos tu casa o terreno.</p></div>
-        <div class="acc"><a class="btn btn-wa wa-link" href="#" data-msg="Hola, quisiera vender/comprar una propiedad."><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2zm-3.3 5.7c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.4-.3-2-1c-.3-.1-.5-.1-.7.2l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5v-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5h-.5z"/></svg>Escríbenos por WhatsApp</a><a class="btn btn-borde" id="correo-link" href="#" hidden>Enviar un correo</a></div>
+      <div class="serv-caja">
+        <div>
+          <h2 class="serv-tit">Nuestros<b>Servicios</b></h2>
+          <a class="serv-btn" href="#contacto">Contáctanos</a>
+        </div>
+        <div class="serv-lista">
+          <a class="serv-it wa-link" href="#contacto" data-msg="Hola, quisiera avaluar mi propiedad."><i class="serv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M3 11.5 12 4l9 7.5M5.5 9.6V20h13V9.6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M14.2 12.4c-.4-.6-1.2-1-2.2-1-1.2 0-2 .6-2 1.5 0 2 4.3 1 4.3 3.1 0 .9-.9 1.5-2.2 1.5-1 0-1.9-.4-2.3-1.1M12 10.4v1m0 6.2v1"/></svg></i><span>Avalúa tu<b>propiedad</b></span></a>
+          <a class="serv-it wa-link" href="#contacto" data-msg="Hola, quisiera grabar un video de mi propiedad con ustedes."><i class="serv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6.5" width="13.5" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="m16 10.5 5.5-3v9l-5.5-3z"/><circle cx="6.5" cy="10" r="1.2" fill="currentColor"/></svg></i><span>Graba con<b>nosotros</b></span></a>
+          <a class="serv-it wa-link" href="#contacto" data-msg="Hola, quisiera vender mi propiedad."><i class="serv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M3 11.5 12 4l9 7.5M5.5 9.6V20h13V9.6"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M10 20v-5.5h4V20"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M15.5 3.5h4v4"/></svg></i><span>Vende tu<b>propiedad</b></span></a>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="cform-sec">
+    <div class="envoltura cform">
+      <div>
+        <h2>Contáctanos<b>Proporciona tus datos</b></h2>
+        <form id="cform" novalidate>
+          <input name="nombre" placeholder="Nombre" autocomplete="given-name" required>
+          <input name="apellido" placeholder="Apellido" autocomplete="family-name">
+          <input name="telefono" placeholder="Teléfono" type="tel" autocomplete="tel" required>
+          <input name="correo" placeholder="E-mail" type="email" autocomplete="email">
+          <input class="ancho" name="asunto" placeholder="Asunto">
+          <textarea class="ancho" name="mensaje" placeholder="Mensaje"></textarea>
+          <label class="acepto"><input type="checkbox" name="acepto" required><span>Deseo ser contactado y acepto que Beltrán Inmobiliaria use estos datos solo para responder mi consulta.</span></label>
+          <p class="aviso" id="cform-aviso" role="alert"></p>
+          <button class="enviar" type="submit">Enviar</button>
+        </form>
+      </div>
+      <div class="cform-mapa" id="cform-mapa"></div>
     </div>
   </section>
 </main>
@@ -727,7 +791,23 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   // WhatsApp and e-mail links come from config.js
   const waUrl = (msg) => CFG.whatsapp ? `https://wa.me/${String(CFG.whatsapp).replace(/\D/g, '')}?text=${encodeURIComponent(msg)}` : '#contacto';
   document.querySelectorAll('.wa-link').forEach((a) => { a.href = waUrl(a.dataset.msg || 'Hola'); if (CFG.whatsapp) { a.target = '_blank'; a.rel = 'noopener'; } });
-  if (CFG.correo) { const c = $('correo-link'); c.hidden = false; c.href = 'mailto:' + CFG.correo; }
+  if (CFG.correo) { const c = $('correo-link'); if (c) { c.hidden = false; c.href = 'mailto:' + CFG.correo; } }
+  (() => {
+    const caja = $('cform-mapa');
+    if (caja) { const q = encodeURIComponent(CFG.oficina || 'Puyo, Pastaza, Ecuador'); caja.innerHTML = `<iframe title="Ubicación de Beltrán Inmobiliaria" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${q}&z=16&output=embed"></iframe>`; }
+    const f = $('cform'); if (!f) return;
+    f.addEventListener('submit', (e) => {
+      e.preventDefault(); const d = Object.fromEntries(new FormData(f)); const av = $('cform-aviso');
+      if (!String(d.nombre || '').trim() || !String(d.telefono || '').trim()) { av.textContent = 'Escribe al menos tu nombre y tu teléfono.'; return; }
+      if (!d.acepto) { av.textContent = 'Marca la casilla para que podamos contactarte.'; return; }
+      av.textContent = '';
+      const l = [`Hola, soy ${[d.nombre, d.apellido].map((x) => String(x || '').trim()).filter(Boolean).join(' ')}.`];
+      if (d.asunto) l.push(`Asunto: ${d.asunto}`); if (d.mensaje) l.push('', d.mensaje); l.push('', `Teléfono: ${d.telefono}`); if (d.correo) l.push(`Correo: ${d.correo}`);
+      const msg = l.join('\n');
+      if (CFG.whatsapp) window.open(waUrl(msg), '_blank', 'noopener'); else if (CFG.correo) location.href = `mailto:${CFG.correo}?subject=${encodeURIComponent(d.asunto || 'Contacto desde la web')}&body=${encodeURIComponent(msg)}`;
+      f.reset();
+    });
+  })();
 
   // Firestore REST: public, read-only list kept in sync by the Beltrán app.
   const valor = (v) => {
@@ -977,7 +1057,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   const marcaTarjeta = (e, on) => { const q = e.target.closest && e.target.closest('.pin-casa'); if (!q) return; const t = document.querySelector(`.tarjeta[data-id="${CSS.escape(q.dataset.id)}"]`); if (t) t.classList.toggle('resaltada', on); };
   document.addEventListener('mouseover', (e) => { if (e.target.closest && e.target.closest('#mapa')) marcaTarjeta(e, true); });
   document.addEventListener('mouseout', (e) => { if (e.target.closest && e.target.closest('#mapa')) marcaTarjeta(e, false); });
-  document.querySelectorAll('.sec-cab, #mapa, .nosotros > *, .contacto').forEach((n) => revelar(n));
+  document.querySelectorAll('.sec-cab, #mapa, .nosotros > *, .serv-caja, .cform').forEach((n) => revelar(n));
   document.querySelectorAll('.valor').forEach((n, k) => { revelar(n, k); n.addEventListener('pointermove', (e) => { const r = n.getBoundingClientRect(); n.style.setProperty('--mx', e.clientX - r.left + 'px'); n.style.setProperty('--my', e.clientY - r.top + 'px'); }); });
   // Navigation: solid header after the hero edge, progress bar, active link, mobile menu, back to top
   const cab = $('cab'), prog = $('progreso'), arriba = $('arriba'), fondoHero = $('hero-fondo'), enlaces = [...document.querySelectorAll('.cab nav a.enl')];
