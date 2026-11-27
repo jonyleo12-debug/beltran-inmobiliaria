@@ -639,6 +639,29 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .serv-ic::before { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)); opacity: var(--c); pointer-events: none; }
 .serv-ic svg { position: relative; filter: drop-shadow(0 2px 6px rgba(0,0,0, calc(.6 * var(--c)))); }
 .serv-it:hover .serv-ic { border-color: rgba(255,255,255,.7); transform: translateY(-2px); }
+/* tarjeta al tocar una casita del mapa */
+.mapa-caja { position: relative; }
+.mapa-pop { position: absolute; z-index: 500; left: 50%; top: 18px; transform: translateX(-50%); width: min(640px, calc(100% - 24px)); display: grid; grid-template-columns: 230px 1fr; gap: 20px; padding: 14px; border-radius: 24px; background: rgba(16, 22, 47, .88); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%); border: 1px solid rgba(255,255,255,.16); box-shadow: 0 30px 60px -24px rgba(0,0,0,.75); color: #fff; animation: popEntra .35s var(--suavizado) both; }
+@keyframes popEntra { from { opacity: 0; transform: translate(-50%, 10px) scale(.97); } }
+.mapa-pop[hidden] { display: none; }
+.mp-foto { position: relative; border-radius: 16px; overflow: hidden; background: #131a38; min-height: 190px; }
+.mp-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mp-foto .sin { position: absolute; inset: 0; display: grid; place-items: center; } .mp-foto .sin img { position: static; width: 46%; height: auto; opacity: .5; }
+.mp-foto .estado { left: 10px; top: 10px; }
+.mp-info { min-width: 0; display: grid; align-content: start; gap: 6px; padding: 4px 34px 4px 0; }
+.mp-tipo { display: flex; align-items: center; gap: 7px; font: 600 11px var(--titulos); letter-spacing: .18em; text-transform: uppercase; color: var(--acento); }
+.mp-tipo svg { width: 14px; height: 14px; }
+.mp-info h3 { margin: 0; font: 400 30px/1 var(--display); letter-spacing: .02em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mp-precio { font: 700 26px var(--titulos); color: #fff; }
+.mp-dir { display: flex; align-items: center; gap: 6px; color: var(--suave); font-size: 14px; } .mp-dir svg { width: 15px; height: 15px; flex: none; }
+.mp-dir { min-width: 0; } .mp-dir span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mp-info .datos { margin: 4px 0 0; padding: 8px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+.mp-servs { display: flex; flex-wrap: wrap; gap: 6px 14px; color: #d3d8ea; font-size: 13px; } .mp-servs span { display: inline-flex; align-items: center; gap: 5px; } .mp-servs svg { width: 16px; height: 16px; }
+.mp-acc { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.mp-acc .btn { padding: 10px 18px; font-size: 14px; }
+.mp-cerrar { position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; font-size: 18px; line-height: 1; cursor: pointer; }
+.mp-cerrar:hover { background: rgba(255,255,255,.18); }
+@media (max-width: 640px) { .mapa-pop { grid-template-columns: 104px 1fr; gap: 12px; top: 8px; padding: 8px; border-radius: 18px; width: calc(100% - 16px); } .mp-foto { min-height: 0; border-radius: 12px; } .mp-foto .estado { display: none; } .mp-info { gap: 3px; padding: 2px 30px 2px 0; } .mp-tipo { font-size: 9.5px; } .mp-info h3 { font-size: 22px; } .mp-precio { font-size: 18px; } .mp-dir { font-size: 12.5px; } .mp-info .datos, .mp-servs { display: none; } .mp-acc { margin-top: 6px; gap: 6px; } .mp-acc .btn { padding: 8px 12px; font-size: 12.5px; } .mp-acc .btn .fl { display: none; } .mp-cerrar { width: 28px; height: 28px; right: 8px; top: 8px; } }
 </style>
 </head>
 <body>
@@ -700,7 +723,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   <section id="mapa-sec" style="padding-top:64px">
     <div class="envoltura">
       <div class="sec-cab"><div><span class="ceja">Ubicación exacta</span><h2 class="tit">Cada propiedad,<br><em>en el mapa.</em></h2><p>Toca una casita para ver la propiedad.</p></div></div>
-      <div id="mapa" aria-label="Mapa de propiedades"></div>
+      <div class="mapa-caja"><div id="mapa" aria-label="Mapa de propiedades"></div><div class="mapa-pop" id="mapa-pop" hidden></div></div>
     </div>
   </section>
 
@@ -949,6 +972,27 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   };
   const PIN_COLOR = { Vendida: '#8a8a8a', Reservada: '#c9952b' };
   const precioCorto = (n) => n >= 10000 ? '$' + (Math.round(n / 100) / 10).toString().replace('.', ',') + 'k' : usd.format(n);
+  // Tarjeta de la propiedad sobre el mapa (al tocar una casita)
+  function popMapa(p) {
+    const box = $('mapa-pop'); if (!box) return;
+    const f = (p.fotos || [])[0], servs = [...Object.keys(SERV).filter((k) => (p.servicios || []).includes(k))];
+    const dest = p.lat != null ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}` : '';
+    box.innerHTML = `<div class="mp-foto">${f ? `<img src="${esc(f)}" alt="${esc(p.nombre || p.tipo)}">` : '<div class="sin"><img src="assets/icono.svg?v=3" alt=""></div>'}<span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span></div>
+      <div class="mp-info"><span class="mp-tipo"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${esc(p.tipo || 'Propiedad')}</span><h3>${esc(p.nombre || p.tipo || 'Propiedad')}</h3>
+      <div class="mp-precio">${p.precio ? usd.format(p.precio) : 'Precio a consultar'}</div>
+      <div class="mp-dir">${ICO.pin}<span>${esc(p.dir || 'Puyo, Pastaza')}</span></div>
+      ${datosHtml(p, 3) ? `<div class="datos">${datosHtml(p, 3)}</div>` : ''}
+      ${servs.length ? `<div class="mp-servs">${servs.map((k) => `<span>${SERV_ICO[k] || ''}${esc(SERV[k])}</span>`).join('')}</div>` : ''}
+      <div class="mp-acc"><a class="btn btn-acento" href="#p/${esc(p.id)}">Ver propiedad<span class="fl">${FLECHA}</span></a>${dest ? `<a class="btn btn-borde" href="${dest}" target="_blank" rel="noopener">Cómo llegar ↗</a>` : ''}</div></div>
+      <button class="mp-cerrar" type="button" aria-label="Cerrar">×</button>`;
+    box.hidden = false; box.style.animation = 'none'; void box.offsetWidth; box.style.animation = '';
+    box.querySelector('.mp-cerrar').addEventListener('click', cerrarPop);
+    const baja = innerWidth < 640 ? 70 : 140;
+    if (window.google && mapa && mapa.panTo && !mapa.project) { mapa.panTo({ lat: p.lat, lng: p.lng }); mapa.panBy(0, -baja); }
+    else if (mapa && mapa.project) { const pt = mapa.project([p.lat, p.lng], mapa.getZoom()).subtract([0, baja]); mapa.panTo(mapa.unproject(pt, mapa.getZoom())); }
+  }
+  function cerrarPop() { const box = $('mapa-pop'); if (box) box.hidden = true; }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarPop(); });
   const htmlPin = (p) => `<div class="pin-casa ${esc(p.estado)}" data-id="${esc(p.id)}"><svg viewBox="0 0 34 40" width="34" height="40" aria-hidden="true"><path d="M17 39s-13-12.6-13-22.2A13 13 0 0 1 30 16.8C30 26.4 17 39 17 39z" fill="${PIN_COLOR[p.estado] || '#2e51a1'}" stroke="#fff" stroke-width="2"/><path transform="translate(8.6 8.2) scale(.7)" fill="#fff" fill-rule="evenodd" d="${GLIFOS[p.tipo] || GLIFOS.Otro}"/></svg>${p.precio ? `<span class="pill-t">${precioCorto(p.precio)}</span>` : ''}</div>`;
   function pinG(m, p, click) {
     const o = new google.maps.OverlayView(), pos = new google.maps.LatLng(p.lat, p.lng);
@@ -963,19 +1007,19 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   const LIMPIO = [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }, { featureType: 'transit', stylers: [{ visibility: 'off' }] }, { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] }, { featureType: 'landscape', stylers: [{ saturation: -60 }, { lightness: 20 }] }, { featureType: 'water', stylers: [{ saturation: -30 }, { lightness: 10 }] }];
   const opcG = { styles: LIMPIO, mapTypeControl: true, mapTypeControlOptions: { mapTypeIds: ['roadmap', 'hybrid'] }, streetViewControl: false, gestureHandling: 'greedy', clickableIcons: false };
   async function pintarMapaG(vs) {
-    if (!mapa) mapa = new google.maps.Map($('mapa'), Object.assign({ center: { lat: -1.4924, lng: -78.0024 }, zoom: 14 }, opcG));
+    if (!mapa) { mapa = new google.maps.Map($('mapa'), Object.assign({ center: { lat: -1.4924, lng: -78.0024 }, zoom: 14 }, opcG)); mapa.addListener('click', cerrarPop); }
     gCosas.forEach((c) => c.setMap(null)); gCosas = [];
     const con = vs.filter((p) => p.lat != null && p.lng != null), b = new google.maps.LatLngBounds();
     con.forEach((p) => {
       if ((p.poligono || []).length > 2) gCosas.push(poligonoG(mapa, p));
-      gCosas.push(pinG(mapa, p, () => { location.hash = 'p/' + p.id; })); b.extend({ lat: p.lat, lng: p.lng });
+      gCosas.push(pinG(mapa, p, (e) => { if (e) e.stopPropagation(); popMapa(p); })); b.extend({ lat: p.lat, lng: p.lng });
     });
     if (con.length === 1) { mapa.setCenter(b.getCenter()); mapa.setZoom(16); }
     else if (con.length) { mapa.fitBounds(b, 50); google.maps.event.addListenerOnce(mapa, 'idle', () => { if (mapa.getZoom() > 16) mapa.setZoom(16); }); }
   }
   function iniciarMapa() {
     if (mapa || !window.L) return;
-    mapa = L.map('mapa', { scrollWheelZoom: true }).setView([-1.4924, -78.0024], 14);
+    mapa = L.map('mapa', { scrollWheelZoom: true }).setView([-1.4924, -78.0024], 14); mapa.on('click', cerrarPop);
     satelite(mapa);
     capa = L.layerGroup().addTo(mapa);
   }
@@ -987,7 +1031,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     con.forEach((p) => {
       if ((p.poligono || []).length > 2) L.polygon(p.poligono.map((q) => [q.lat, q.lng]), { color: '#ffffff', fillColor: '#4d5c85', weight: 2, fillOpacity: .35 }).addTo(capa);
       const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: htmlPin(p), iconSize: [0, 0] }), title: p.nombre || p.tipo }).addTo(capa);
-      m.on('click', () => { location.hash = 'p/' + p.id; });
+      m.on('click', (e) => { if (e.originalEvent) L.DomEvent.stopPropagation(e); popMapa(p); });
     });
     if (con.length) mapa.fitBounds(L.latLngBounds(con.map((p) => [p.lat, p.lng])).pad(.25), { maxZoom: 16 });
   }
