@@ -596,7 +596,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 @media (max-width: 760px) { .ficha > .gal2:not(.inicio) { grid-template-rows: minmax(0, 1fr) 96px; } .ficha > .gal2 .lado { padding: 6px; } }
 
 /* ===== Servicios ===== */
-.serv-sec { position: relative; padding: clamp(70px, 10vw, 140px) 0; background: url(assets/servicios2.jpg) center/cover no-repeat; }
+.serv-sec { position: relative; padding: clamp(70px, 10vw, 140px) 0; background: url(assets/servicios3.jpg) center/cover no-repeat; }
 .serv-caja { display: grid; grid-template-columns: minmax(220px, .8fr) 2fr; gap: clamp(24px, 4vw, 56px); align-items: center; padding: clamp(32px, 4vw, 56px); border-radius: 22px; background: #161c35; box-shadow: 0 40px 80px -40px rgba(0,0,0,.8); }
 .serv-tit { margin: 0; font: 400 clamp(26px, 2.6vw, 38px)/1.15 var(--titulos); color: #fff; }
 .serv-tit b { display: block; font: 400 clamp(48px, 4.6vw, 70px)/.95 var(--display); letter-spacing: .02em; }
@@ -630,6 +630,12 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .cform-mapa { height: 100%; min-height: 460px; border-radius: 6px; overflow: hidden; background: #0b1024; }
 .cform-mapa iframe { display: block; width: 100%; height: 100%; min-height: 460px; border: 0; }
 @media (max-width: 900px) { .cform { grid-template-columns: 1fr; } .cform form { grid-template-columns: 1fr; } .cform-mapa, .cform-mapa iframe { min-height: 320px; } }
+/* al pasar el cursor por un servicio, el panel azul se vuelve cristal */
+.serv-caja { transition: background .5s ease, box-shadow .5s ease, -webkit-backdrop-filter .5s ease, backdrop-filter .5s ease; }
+.serv-caja:has(.serv-it:hover) { background: rgba(22, 28, 53, .14); -webkit-backdrop-filter: blur(3px) saturate(120%); backdrop-filter: blur(3px) saturate(120%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.28), 0 40px 80px -40px rgba(0,0,0,.6); }
+.serv-caja:has(.serv-it:hover) .serv-tit, .serv-caja:has(.serv-it:hover) .serv-btn { text-shadow: 0 2px 14px rgba(0,0,0,.7); }
+.serv-caja:has(.serv-it:hover) .serv-it { background: rgba(11, 16, 36, .35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.serv-caja .serv-it:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
 </style>
 </head>
 <body>
