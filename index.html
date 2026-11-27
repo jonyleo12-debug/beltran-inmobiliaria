@@ -631,9 +631,9 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 .cform-mapa iframe { display: block; width: 100%; height: 100%; min-height: 460px; border: 0; }
 @media (max-width: 900px) { .cform { grid-template-columns: 1fr; } .cform form { grid-template-columns: 1fr; } .cform-mapa, .cform-mapa iframe { min-height: 320px; } }
 /* panel semitransparente fijo (--o: 0 cristal → 1 azul sólido) */
-.serv-caja { --o: .75; --c: calc(1 - var(--o)); background: rgba(22, 28, 53, calc(.14 + .86 * var(--o))); -webkit-backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); box-shadow: inset 0 0 0 1px rgba(255,255,255, calc(.28 * var(--c))), 0 40px 80px -40px rgba(0,0,0,.7); }
+.serv-caja { --o: 1; --c: calc(1 - var(--o)); background: rgba(22, 28, 53, calc(.14 + .86 * var(--o))); -webkit-backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); backdrop-filter: blur(calc(3px * var(--c))) saturate(calc(100% + 20% * var(--c))); box-shadow: inset 0 0 0 1px rgba(255,255,255, calc(.28 * var(--c))), 0 40px 80px -40px rgba(0,0,0,.7); }
 .serv-caja .serv-tit, .serv-caja .serv-btn, .serv-caja .serv-it { text-shadow: 0 2px 14px rgba(0,0,0, calc(.75 * var(--c))); }
-.serv-caja .serv-it { background: rgba(11, 16, 36, calc(.35 * var(--c))); border-color: rgba(255,255,255, calc(.12 + .2 * var(--c))); -webkit-backdrop-filter: blur(calc(10px * var(--c))); backdrop-filter: blur(calc(10px * var(--c))); }
+.serv-caja .serv-it { background: rgba(255, 255, 255, .05); border-color: rgba(255,255,255, calc(.12 + .2 * var(--c))); -webkit-backdrop-filter: blur(calc(10px * var(--c))); backdrop-filter: blur(calc(10px * var(--c))); }
 .serv-caja .serv-it:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255,255,255,.6); }
 .serv-ic { position: relative; overflow: hidden; border-color: rgba(255,255,255, calc(.16 + .34 * var(--c))); box-shadow: inset 0 1px 0 rgba(255,255,255, calc(.6 * var(--c))), 0 10px 24px -10px rgba(0,0,0, calc(.55 * var(--c))); transition: transform .4s var(--suavizado), border-color .3s; }
 .serv-ic::before { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg, rgba(255,255,255,.28), rgba(255,255,255,.06) 55%, rgba(255,255,255,.14)); opacity: var(--c); pointer-events: none; }
