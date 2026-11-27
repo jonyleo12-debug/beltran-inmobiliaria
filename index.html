@@ -673,6 +673,9 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 @keyframes brillaPromo { 50% { box-shadow: 0 0 3px var(--promo), 0 0 13px color-mix(in srgb, var(--promo) 60%, transparent), inset 0 0 8px color-mix(in srgb, var(--promo) 40%, transparent), 0 24px 50px -30px rgba(0,0,0,.5); } }
 .promo-tag[style*="#f5c518"] { color: #1c2340; }
 @media (prefers-reduced-motion: reduce) { .tarjeta.promo { animation: none; } }
+.promo-tag { transform-origin: left center; animation: latePromo 1.6s ease-in-out infinite; }
+@keyframes latePromo { 0%, 60%, 100% { transform: scale(1); } 15% { transform: scale(1.1); } 30% { transform: scale(1); } 45% { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .promo-tag { animation: none; } }
 </style>
 </head>
 <body>
