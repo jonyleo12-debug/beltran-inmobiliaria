@@ -563,8 +563,8 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
   .grilla .tarjeta .info { flex: 0 0 auto; }
   .grilla .tarjeta .foto > img { position: absolute; inset: 0; }
   .grilla .tarjeta .datos, .grilla .tarjeta .precio { max-height: 0; min-height: 0; margin-top: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; border-bottom-width: 0; transition: max-height .6s var(--suavizado), opacity .4s, padding .6s var(--suavizado), margin .6s var(--suavizado); }
-  .grilla .tarjeta:hover .datos, .grilla .tarjeta:focus-visible .datos { max-height: 90px; min-height: 59px; opacity: 1; margin-top: 12px; padding-bottom: 16px; border-bottom-width: 1px; }
-  .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio { max-height: 60px; opacity: 1; padding-top: 14px; }
+  .grilla .tarjeta:hover .datos, .grilla .tarjeta:focus-visible .datos, .grilla .tarjeta.abierta .datos { max-height: 90px; min-height: 59px; opacity: 1; margin-top: 12px; padding-bottom: 16px; border-bottom-width: 1px; }
+  .grilla .tarjeta:hover .precio, .grilla .tarjeta:focus-visible .precio, .grilla .tarjeta.abierta .precio { max-height: 60px; opacity: 1; padding-top: 14px; }
   .grilla .tarjeta:hover, .grilla .tarjeta.rev.vis:hover { transform: none; }
 }
 
@@ -922,6 +922,8 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   let favs = new Set(); try { favs = new Set(JSON.parse(localStorage.getItem('beltran-fav') || '[]')); } catch (e) {}
   const guardarFavs = () => { try { localStorage.setItem('beltran-fav', JSON.stringify([...favs])); } catch (e) {} };
   const esc = (t) => String(t == null ? '' : t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Celular: la tarjeta que está en el centro de la pantalla muestra sus datos; al pasarla se ocultan.
+  const obsAbre = ('IntersectionObserver' in window && matchMedia('(hover: none)').matches) ? new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('abierta', e.isIntersecting)), { rootMargin: '-30% 0px -30% 0px' }) : null;
   function tarjeta(p) {
     const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '') + (promoDe(p) ? ' promo' : '')); a.href = '#p/' + p.id; if (promoDe(p)) a.style.setProperty('--promo', promoDe(p).c);
     const fotos = p.fotos || [];
@@ -940,6 +942,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
     a.addEventListener('mouseenter', () => { const q = pin(); if (q) q.classList.add('activo'); });
     a.addEventListener('mouseleave', () => { const q = pin(); if (q) q.classList.remove('activo'); });
     a.dataset.id = p.id;
+    if (obsAbre) obsAbre.observe(a);
     return a;
   }
   const ORDEN = { menor: (a, b) => (a.precio || 9e9) - (b.precio || 9e9), mayor: (a, b) => (b.precio || 0) - (a.precio || 0), nuevas: (a, b) => String(b.creado || '').localeCompare(String(a.creado || '')) };
