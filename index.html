@@ -689,6 +689,11 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 /* Propiedades a todo el ancho */
 #propiedades > .envoltura { width: calc(100% - 2 * clamp(16px, 4vw, 72px)); }
 @media (min-width: 1201px) { #propiedades .grilla { grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); } }
+/* portada con la misma composición en toda pantalla: alto proporcional al ancho */
+.modus, .modus.modus { height: 44vw !important; min-height: 0 !important; padding: 0 !important; margin: 0; }
+.modus::before { background-position: center 82% !important; }
+.md-marca, .md-marca.md-marca { position: absolute; left: 0; right: 0; top: 3.6vw; padding: 0 10% 0 0 !important; font-size: 15vw !important; }
+.md-inmo { display: block !important; }
 </style>
 </head>
 <body>
@@ -1199,7 +1204,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   function ubicarInmo() { const m = document.querySelector('.modus'), t = $('md-inmo'); if (!m || !t) return;
     const W = m.clientWidth, H = m.clientHeight, sc = Math.max(W / 1200, H / 896), bp = getComputedStyle(m, '::before').backgroundPosition.split(' ').map((v) => parseFloat(v) / 100);
     const ox = (W - 1200 * sc) * (bp[0] || .5), oy = (H - 896 * sc) * (bp[1] == null ? .5 : bp[1]);
-    t.style.left = (967 * sc + ox) + 'px'; t.style.top = (536 * sc + oy) + 'px'; t.style.fontSize = Math.max(11, 22 * sc) + 'px'; t.style.letterSpacing = (.45 * Math.max(11, 22 * sc)) + 'px'; t.classList.add('ok'); }
+    t.style.left = (967 * sc + ox) + 'px'; t.style.top = (536 * sc + oy) + 'px'; t.style.fontSize = Math.max(6, 22 * sc) + 'px'; t.style.letterSpacing = (.45 * Math.max(6, 22 * sc)) + 'px'; t.classList.add('ok'); }
   ubicarInmo(); addEventListener('resize', ubicarInmo);
   [['r-fb', 'facebook'], ['r-ig', 'instagram'], ['r-tt', 'tiktok']].forEach(([id, k]) => { const a = $(id); if (a && CFG[k]) a.href = CFG[k]; });
   cargar();
