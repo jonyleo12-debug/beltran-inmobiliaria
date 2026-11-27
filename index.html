@@ -18,8 +18,8 @@
 <meta name="twitter:image" content="https://jonyleo12-debug.github.io/beltran-inmobiliaria/assets/compartir.jpg">
 <meta name="theme-color" content="#0b1024">
 <meta name="color-scheme" content="dark">
-<link rel="icon" href="assets/favicon.png?v=2">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
+<link rel="icon" type="image/svg+xml" href="assets/icono.svg?v=3"><link rel="icon" type="image/png" href="assets/favicon.png?v=3">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -91,7 +91,7 @@ body.menu .hamb span:nth-child(3) { transform: translateY(-6.6px) rotate(-45deg)
 .hero-fondo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease; transform: scale(1.04); will-change: opacity, transform; }
 .hero-fondo img.ver { opacity: 1; animation: acercar 9s ease-out both; }
 @keyframes acercar { from { transform: scale(1.04); } to { transform: scale(1.14); } }
-.hero-fondo::before { content: ''; position: absolute; right: -6%; bottom: -18%; width: 620px; height: 680px; background: url(assets/icono.png?v=2) center/contain no-repeat; opacity: .12; transform: rotate(-8deg); animation: flota 14s ease-in-out infinite; }
+.hero-fondo::before { content: ''; position: absolute; right: -6%; bottom: -18%; width: 620px; height: 680px; background: url(assets/icono.svg?v=3) center/contain no-repeat; opacity: .12; transform: rotate(-8deg); animation: flota 14s ease-in-out infinite; }
 .hero.con-foto .hero-fondo::before { display: none; }
 .hero-fondo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11, 16, 36, .94) 0%, rgba(11, 16, 36, .66) 42%, rgba(11, 16, 36, .28) 100%), linear-gradient(180deg, rgba(11, 16, 36, .55) 0%, rgba(11, 16, 36, 0) 26%, rgba(11, 16, 36, 0) 62%, var(--fondo) 100%); }
 .hero:not(.con-foto) .hero-fondo::after { background: linear-gradient(180deg, rgba(11, 16, 36, 0) 60%, var(--fondo) 100%); }
@@ -219,7 +219,7 @@ section { padding: 96px 0; scroll-margin-top: 60px; }
 
 /* Contact + footer */
 .contacto { position: relative; overflow: hidden; border-radius: 28px; border: 1px solid rgba(255, 255, 255, .14); padding: clamp(32px, 5vw, 64px); display: grid; grid-template-columns: 1.2fr auto; gap: 28px; align-items: center; background: linear-gradient(120deg, #2b3560 0%, #1a2145 55%, #131a38 100%); }
-.contacto::before { content: ''; position: absolute; right: -40px; top: -70px; width: 380px; height: 420px; background: url(assets/icono.png?v=2) center/contain no-repeat; opacity: .13; transform: rotate(-8deg); animation: flota 14s ease-in-out infinite; }
+.contacto::before { content: ''; position: absolute; right: -40px; top: -70px; width: 380px; height: 420px; background: url(assets/icono.svg?v=3) center/contain no-repeat; opacity: .13; transform: rotate(-8deg); animation: flota 14s ease-in-out infinite; }
 .contacto > * { position: relative; }
 .contacto p { margin: 12px 0 0; color: #cfd3e3; }
 .contacto .acc { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -456,7 +456,7 @@ body.bloq .wa-flota, body.bloq .arriba, body.menu .wa-flota, body.menu .arriba {
 .sp-car::-webkit-scrollbar { display: none; }
 .sp-card { position: relative; flex: 0 0 min(200px, 46%); aspect-ratio: 3 / 4; border-radius: 18px; overflow: hidden; scroll-snap-align: start; text-decoration: none; background: #1b2347; animation: entra .6s var(--suavizado) both; }
 .sp-card img, .sp-sin { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--suavizado); }
-.sp-sin { background: url(assets/icono.png?v=2) center/40% no-repeat, #1b2347; opacity: .5; }
+.sp-sin { background: url(assets/icono.svg?v=3) center/40% no-repeat, #1b2347; opacity: .5; }
 .sp-card:hover img { transform: scale(1.08); }
 .sp-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 45%, rgba(7,10,24,.88)); }
 .sp-txt { position: absolute; z-index: 1; left: 14px; right: 14px; bottom: 14px; display: grid; gap: 4px; color: #fff; }
@@ -590,7 +590,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
 <div class="progreso" id="progreso"></div>
 <header class="cab" id="cab">
   <div class="envoltura">
-    <a class="logo" href="#inicio" aria-label="Beltrán Inmobiliaria, inicio"><img src="assets/logo-blanco.png?v=2" alt="Beltrán Inmobiliaria" width="172" height="52"></a>
+    <a class="logo" href="#inicio" aria-label="Beltrán Inmobiliaria, inicio"><img src="assets/logo-blanco.png?v=3" alt="Beltrán Inmobiliaria" width="172" height="46"></a>
     <button class="hamb" id="hamb" type="button" aria-label="Abrir menú" aria-expanded="false"><div><span></span><span></span><span></span></div></button>
     <nav id="menu">
       <a class="enl" href="#propiedades">Propiedades</a>
@@ -766,7 +766,7 @@ footer .pie b { color: #b4c1ee; font-weight: 500; }
   function tarjeta(p) {
     const a = el('a', 'tarjeta' + (p.estado === 'Vendida' ? ' vendida' : '')); a.href = '#p/' + p.id;
     const fotos = p.fotos || [];
-    a.innerHTML = `<div class="foto">${fotos[0] ? `<img src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo)}" loading="lazy">` : '<div class="sin"><img src="assets/icono.png" alt=""></div>'}
+    a.innerHTML = `<div class="foto">${fotos[0] ? `<img src="${esc(fotos[0])}" alt="${esc(p.nombre || p.tipo)}" loading="lazy">` : '<div class="sin"><img src="assets/icono.svg?v=3" alt=""></div>'}
       <span class="estado ${esc(p.estado)}">${ESTADO[p.estado] || 'En venta'}</span><button class="cora" type="button" aria-label="Guardar en favoritas" aria-pressed="${favs.has(p.id)}">${CORAZON}</button>${fotos.length > 1 ? `<div class="pfotos">${fotos.slice(0, 8).map((f, k) => `<button type="button" aria-label="Foto ${k + 1}" aria-current="${k === 0}"></button>`).join('')}</div>` : ''}</div>
       <div class="info"><h3>${esc(p.nombre || p.tipo || 'Propiedad en venta')}</h3>
       <span class="dir">${ICO.pin}<span>${esc(lugar(p))}</span></span><div class="datos">${datosHtml(p)}</div>
